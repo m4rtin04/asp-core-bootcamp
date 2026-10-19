@@ -21,6 +21,14 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   * Lectura y parseo del cuerpo de la petición (`Request.Body`) enviado en formato `x-www-form-urlencoded`.
   * Aplicación de validaciones defensivas (*Fail Fast* / *Guard Clauses*) para múltiples errores.
 
+### - Sección 5: Routing y Restricciones de Ruta
+- **Proyecto:** Servicio de Países basado en Enrutamiento.
+- **Descripción:** Implementación de endpoints interactivos para consultar catálogos y recursos mediante parámetros dinámicos en la URL.
+- **Conceptos clave:**
+  * Configuración de rutas utilizando `UseEndpoints` y `MapGet`.
+  * Captura y uso de parámetros de ruta esenciales.
+  * Aplicación de restricciones de ruta (*Route Constraints*, tipos de datos y rangos numéricos).
+  * Control robusto de códigos de estado HTTP (`200 OK`, `400 Bad Request`, `404 Not Found`).
 ---
 
 ---
