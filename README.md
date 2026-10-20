@@ -29,7 +29,16 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   * Captura y uso de parámetros de ruta esenciales.
   * Aplicación de restricciones de ruta (*Route Constraints*, tipos de datos y rangos numéricos).
   * Control robusto de códigos de estado HTTP (`200 OK`, `400 Bad Request`, `404 Not Found`).
----
+ 
+ ### - Sección 6: Controllers & IActionResult
+- **Proyecto:** Aplicación Bancaria (Bank API).
+- **Descripción:** Desarrollo de controladores web utilizando Attribute Routing y respuestas basadas en `IActionResult`.
+- **Conceptos clave:**
+  * Creación y organización de controladores mediante la clase base `Controller`.
+  * Uso de Attribute Routing (`[Route(...)]`) para mapear rutas de forma declarativa.
+  * Implementación de diferentes tipos de resultados de acción: `Content`, `Json`, y `File` (archivos estáticos desde `wwwroot`).
+  * Manipulación de datos utilizando objetos anónimos.
+  * Extracción y validación manual de parámetros desde la ruta (`RouteValues`) con restricciones de tipo (`:int`) y control de estados HTTP (`200`, `400`, `404`).
 
 ---
 *Construido con C# y .NET Core.*
