@@ -40,5 +40,14 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   * Manipulación de datos utilizando objetos anónimos.
   * Extracción y validación manual de parámetros desde la ruta (`RouteValues`) con restricciones de tipo (`:int`) y control de estados HTTP (`200`, `400`, `404`).
 
+### - Sección 7: Model Binding y Validaciones con Data Annotations
+- **Proyecto:** Sistema de Procesamiento de Órdenes (E-commerce Order API).
+- **Descripción:** Recepción, validación y procesamiento de órdenes de compra con colecciones anidadas de productos utilizando Model Binding avanzado.
+- **Conceptos clave:** 
+  * Aplicación de **Data Annotations** para validaciones declarativas y restricciones de tipos de datos.
+  * Uso del atributo `[Bind]` para proteger propiedades del sistema e impedir la inyección de valores por parte del usuario (`OrderNo`).
+  * Enlace de colecciones (*Collection Binding*) para mapear listas complejas desde formularios (`Products[0].ProductCode`, etc.).
+  * Validación de reglas de negocio personalizadas (coincidencia de `InvoicePrice` con el costo total de los productos y validación de fechas mínimas).
+  * Manejo del `ModelState` combinando respuestas con `JsonResult` (`200 OK`) y `ContentResult` (`400 Bad Request`).
 ---
 *Construido con C# y .NET Core.*
