@@ -49,5 +49,14 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   * Enlace de colecciones (*Collection Binding*) para mapear listas complejas desde formularios (`Products[0].ProductCode`, etc.).
   * Validación de reglas de negocio personalizadas (coincidencia de `InvoicePrice` con el costo total de los productos y validación de fechas mínimas).
   * Manejo del `ModelState` combinando respuestas con `JsonResult` (`200 OK`) y `ContentResult` (`400 Bad Request`).
+ 
+ ### - Sección 8: Views y Motor Razor
+- **Proyecto:** Aplicación de Clima (Weather App).
+- **Descripción:** Desarrollo de una aplicación web MVC basada en vistas fuertemente tipadas y el motor de vistas Razor para mostrar información meteorológica de múltiples ciudades.
+- **Conceptos clave:**
+  * Creación de vistas fuertemente tipadas mediante `@model` para recibir objetos únicos o colecciones (`IEnumerable<CityWeather>`).
+  * Uso de Attribute Routing avanzado en controladores combinando parámetros opcionales en la ruta (`/weather/{cityCode?}`).
+  * Implementación de **funciones locales en Razor** para calcular dinámicamente clases CSS e inyectar estilos de fondo condicionales según el valor de la temperatura.
+  * Configuración global de directivas y espacios de nombres mediante `_ViewImports.cshtml`.
 ---
 *Construido con C# y .NET Core.*
