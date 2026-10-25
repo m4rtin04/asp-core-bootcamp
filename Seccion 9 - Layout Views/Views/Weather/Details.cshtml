@@ -1,0 +1,29 @@
+﻿@model CityWeather
+@{
+    ViewBag.Title = "Weather Details";
+
+    string GetBackgroundClass(int temp)
+    {
+        if (temp < 44) return "blue-back";
+        if (temp >= 44 && temp <= 74) return "green-back";
+        return "orange-back";
+    }
+}
+
+<a href="/">Back to Home</a>
+
+<div class="margin-top">
+    <div class="box @GetBackgroundClass(Model.TemperatureFahrenheit) w-50 margin-auto">
+        <h2>@Model.CityName (@Model.CityUniqueCode)</h2>
+
+        <p class="margin-top">
+            <strong>Date and Time:</strong>
+            @Model.DateAndTime.ToString("yyyy-MM-dd HH:mm")
+        </p>
+
+        <p class="margin-top">
+            <strong>Temperature:</strong>
+            @Model.TemperatureFahrenheit °F
+        </p>
+    </div>
+</div>
