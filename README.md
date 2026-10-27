@@ -71,8 +71,18 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   - Personalización de títulos mediante `ViewData["Title"]`.
   - Separación entre el diseño general de la aplicación y el contenido de cada vista.
   - Refactorización de Razor Views para mejorar la reutilización, la consistencia visual y el mantenimiento del código.
+ 
+### - Sección 10: Partial Views
+- **Proyecto:** Refactorización de la aplicación de Clima (Weather App).
+- **Descripción:** Modificación del proyecto para centralizar el diseño HTML compartido, modularizar tarjetas repetitivas mediante vistas parciales y optimizar la mantenibilidad del código Razor.
+- **Conceptos clave:**
+  - Creación de `_Layout.cshtml` para definir la estructura común de las páginas.
+  - Uso de `@RenderBody()` para insertar el contenido específico de cada vista.
+  - Creación e invocación de **Partial Views** (`_CityPartial.cshtml`) mediante `@await Html.PartialAsync()` dentro de bucles.
+  - Configuración de `_ViewStart.cshtml` y `_ViewImports.cshtml` para establecer layouts y directivas globales.
+  - Implementación de funciones locales en Razor para calcular dinámicamente clases CSS e inyectar estilos de fondo condicionales según la temperatura.
 
-### Sección 10: Próximamente
+### Sección 11: Próximamente
 ---
 ## 🛠️ Tecnologías y herramientas
 
