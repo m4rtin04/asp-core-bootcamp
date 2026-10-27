@@ -1,0 +1,15 @@
+﻿@model IEnumerable<CityWeather>
+
+@{
+    ViewData["Title"] = "Weather App";
+
+}
+
+<h2>Cities Weather Details</h2>
+
+<div class="flex margin-top">
+    @foreach (var city in Model)
+    {
+        @await Html.PartialAsync("_CityPartial", city)
+    }
+</div>
