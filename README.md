@@ -58,5 +58,33 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   * Uso de Attribute Routing avanzado en controladores combinando parámetros opcionales en la ruta (`/weather/{cityCode?}`).
   * Implementación de **funciones locales en Razor** para calcular dinámicamente clases CSS e inyectar estilos de fondo condicionales según el valor de la temperatura.
   * Configuración global de directivas y espacios de nombres mediante `_ViewImports.cshtml`.
+ 
+  ### Sección 9: Layout Views y Organización de Vistas Razor
+
+- **Proyecto:** Refactorización de la aplicación de Clima (Weather App).
+- **Descripción:** Modificación del proyecto de la sección anterior para centralizar el diseño HTML compartido y reducir la duplicación de código entre las vistas `Index` y `Details`.
+- **Conceptos clave:**
+  - Creación de `_Layout.cshtml` para definir la estructura común de las páginas.
+  - Uso de `@RenderBody()` para insertar el contenido específico de cada vista dentro del layout.
+  - Configuración de `_ViewStart.cshtml` para establecer el layout predeterminado.
+  - Uso de `_ViewImports.cshtml` para centralizar namespaces y habilitar Tag Helpers.
+  - Personalización de títulos mediante `ViewData["Title"]`.
+  - Separación entre el diseño general de la aplicación y el contenido de cada vista.
+  - Refactorización de Razor Views para mejorar la reutilización, la consistencia visual y el mantenimiento del código.
+
+### Sección 10: Próximamente
 ---
-*Construido con C# y .NET Core.*
+## 🛠️ Tecnologías y herramientas
+
+- C#
+- .NET 10
+- ASP.NET Core
+- ASP.NET Core MVC
+- Razor Views
+- HTML5 y CSS3
+- Visual Studio
+- Git y GitHub
+
+---
+
+*Repositorio de aprendizaje práctico construido con C# y ASP.NET Core (.NET 10).*
