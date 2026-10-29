@@ -81,8 +81,18 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   - Creación e invocación de **Partial Views** (`_CityPartial.cshtml`) mediante `@await Html.PartialAsync()` dentro de bucles.
   - Configuración de `_ViewStart.cshtml` y `_ViewImports.cshtml` para establecer layouts y directivas globales.
   - Implementación de funciones locales en Razor para calcular dinámicamente clases CSS e inyectar estilos de fondo condicionales según la temperatura.
+ 
+ ### - Sección 11: View Components
+- **Proyecto:** Refactorización avanzada de la aplicación de Clima (Weather App).
+- **Descripción:** Modificación del proyecto para reemplazar las vistas parciales por **View Components**, encapsulando la lógica de presentación y los datos de las tarjetas de clima en componentes reutilizables e independientes.
+- **Conceptos clave:**
+  - Creación de clases `ViewComponent` personalizadas heredando de la clase base del framework.
+  - Implementación del método `Invoke` / `InvokeAsync` para procesar y retornar datos al componente.
+  - Configuración de la estructura de carpetas obligatoria para vistas de componentes (`Views/Shared/Components/[Name]/Default.cshtml`).
+  - Invocación asíncrona de componentes desde vistas Razor mediante `@await Component.InvokeAsync()`.
+  - Separación óptima de responsabilidades (mini-controladores para elementos de la UI).
 
-### Sección 11: Próximamente
+### Sección 12: Próximamente
 ---
 ## 🛠️ Tecnologías y herramientas
 
