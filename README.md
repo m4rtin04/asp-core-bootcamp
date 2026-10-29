@@ -91,8 +91,21 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   - Configuración de la estructura de carpetas obligatoria para vistas de componentes (`Views/Shared/Components/[Name]/Default.cshtml`).
   - Invocación asíncrona de componentes desde vistas Razor mediante `@await Component.InvokeAsync()`.
   - Separación óptima de responsabilidades (mini-controladores para elementos de la UI).
+ 
+  ### - Sección 12: Dependency Injection
+- **Proyecto:** Refactorización de la aplicación de Clima (Weather App).
+- **Descripción:** Evolución de la aplicación MVC para separar la lógica de acceso a los datos en servicios independientes e incorporar inyección de dependencias mediante interfaces.
+- **Conceptos clave:**
+  * Creación de bibliotecas de clases independientes para `Models`, `ServiceContracts` y `Services`.
+  * Definición de la interfaz `IWeatherService` para establecer el contrato de las operaciones meteorológicas.
+  * Implementación de `WeatherService` para centralizar los datos y las consultas de ciudades.
+  * Uso de `GetWeatherDetails()` para recuperar todas las ciudades y `GetWeatherByCityCode()` para consultar una ciudad por su código.
+  * Aplicación de **Constructor Injection** en `HomeController`, recibiendo `IWeatherService` mediante el constructor.
+  * Registro de la implementación concreta en el contenedor de dependencias de ASP.NET Core con `AddScoped<IWeatherService, WeatherService>()`.
+  * Desacoplamiento entre controladores y servicios, favoreciendo la mantenibilidad, la reutilización y la posibilidad de reemplazar implementaciones.
+  * Mantenimiento de las vistas fuertemente tipadas, el enrutamiento por atributos y los View Components desarrollados en las secciones anteriores.
 
-### Sección 12: Próximamente
+### Sección 13: Próximamente
 ---
 ## 🛠️ Tecnologías y herramientas
 
