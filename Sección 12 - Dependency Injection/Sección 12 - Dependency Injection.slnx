@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="../Models/Models.csproj" Id="1510f57e-38e4-4ef4-8e9f-cd306b0102ea" />
+  <Project Path="../ServiceContracts/ServiceContracts.csproj" Id="612c9648-fa2e-42a5-9c4f-ea0a83c6fa44" />
+  <Project Path="../Services/Services.csproj" />
+  <Project Path="Sección 12 - Dependency Injection.csproj" />
+</Solution>

@@ -1,0 +1,19 @@
+﻿@model CityWeather
+
+<div class="box @ViewBag.BackgroundClass">
+    <h2>@Model.CityName (@Model.CityUniqueCode)</h2>
+
+    <p class="margin-top">
+        <strong>Date and Time:</strong>
+        @Model.DateAndTime.ToString("yyyy-MM-dd HH:mm")
+    </p>
+
+    <p class="margin-top">
+        <strong>Temperature:</strong>
+        @Model.TemperatureFahrenheit °F
+    </p>
+
+    <a href="/weather/@Model.CityUniqueCode">
+        View Details
+    </a>
+</div>
