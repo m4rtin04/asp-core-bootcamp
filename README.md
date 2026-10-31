@@ -104,8 +104,33 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   * Registro de la implementación concreta en el contenedor de dependencias de ASP.NET Core con `AddScoped<IWeatherService, WeatherService>()`.
   * Desacoplamiento entre controladores y servicios, favoreciendo la mantenibilidad, la reutilización y la posibilidad de reemplazar implementaciones.
   * Mantenimiento de las vistas fuertemente tipadas, el enrutamiento por atributos y los View Components desarrollados en las secciones anteriores.
+ 
+### - Sección 14: Configuration & HttpClient Work 24
+- **Proyecto:** Enlaces de Redes Sociales (Social Media Links).
+- **Descripción:** Desarrollo de una aplicación web MVC que muestra enlaces a redes sociales leídos desde archivos de configuración, con valores distintos según el entorno de ejecución.
+- **Conceptos clave:**
+  * Configuración mediante `appsettings.json` y `appsettings.Development.json`, entendiendo que ASP.NET Core combina ambos archivos y el específico del entorno solo sobrescribe las claves que define.
+  * Lectura de configuración tipada mediante el **Options Pattern** (`Configure<T>` e `IOptions<SocialMediaLinksOptions>`).
+  * Envío de los datos del controlador a la vista mediante `ViewBag`.
+  * Uso del tag helper `<environment>` (`exclude="Development"`) para mostrar u ocultar contenido según el entorno.
+  * Habilitación de Tag Helpers con `@addTagHelper` en `_ViewImports.cshtml`.
+  * Cambio de entorno mediante `ASPNETCORE_ENVIRONMENT` o `dotnet run --environment`.
+  * Controlador con Attribute Routing, Layout Views y `_ViewStart.cshtml`.
 
-### Sección 13: Próximamente
+### - Sección 14: Configuration & HttpClient Work 25
+- **Proyecto:** Aplicación de Cotización de Acciones (Stocks App).
+- **Descripción:** Desarrollo de una aplicación web MVC que muestra el precio de una acción con actualizaciones en tiempo real, consumiendo la API de Finnhub.io y aplicando una arquitectura n-layer.
+- **Conceptos clave:**
+  * Consumo de APIs externas mediante `IHttpClientFactory` y `HttpClient`, deserializando la respuesta JSON a `Dictionary<string, object>`.
+  * Definición de la interfaz `IFinnhubService` e implementación de `FinnhubService` con los métodos `GetCompanyProfile()` y `GetStockPriceQuote()`.
+  * Lectura de configuración tipada mediante el **Options Pattern** (`IOptions<TradingOptions>`) desde `appsettings.json`.
+  * Almacenamiento seguro del token de la API con **User Secrets**.
+  * Uso del view model `StockTrade` para enviar datos del controlador a la vista fuertemente tipada.
+  * Controlador con Attribute Routing (`Trade/Index`) y manejo seguro de respuestas con `TryGetValue`.
+  * Conexión a un **WebSocket** desde JavaScript para actualizar el precio sin recargar la página, con cancelación de la suscripción al cerrar la página.
+  * Uso de campos ocultos y secciones Razor (`@section`).
+
+### Sección 15: Próximamente
 ---
 ## 🛠️ Tecnologías y herramientas
 
