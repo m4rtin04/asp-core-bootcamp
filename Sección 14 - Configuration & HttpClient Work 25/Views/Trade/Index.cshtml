@@ -1,0 +1,53 @@
+﻿@model StockTrade
+@{
+    ViewBag.Title = "Stock Price";
+}
+
+<div class="box text-center margin-auto margin-top w-50">
+    <h2 class="text-dark-grey">
+        @Model.StockName
+        <span class="text-grey">(@Model.StockSymbol)</span>
+    </h2>
+
+    <div class="margin-top price-container">
+        <span class="text-green">$</span>
+        <span class="price text-green">@Model.Price.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)</span>
+    </div>
+
+    <!-- Símbolo accesible desde JavaScript -->
+    <input type="hidden" id="StockSymbol" value="@Model.StockSymbol" />
+</div>
+
+@section scripts {
+    <script>
+        const token = "@ViewBag.FinnhubToken";
+        const stockSymbol = document.getElementById("StockSymbol").value;
+        const priceElement = document.querySelector(".price");
+
+        const socket = new WebSocket(`wss://ws.finnhub.io?token=${token}`);
+
+        socket.addEventListener("open", () => {
+            socket.send(JSON.stringify({ type: "subscribe", symbol: stockSymbol }));
+        });
+
+        socket.addEventListener("message", (event) => {
+            const msg = JSON.parse(event.data);
+
+            if (msg.type === "trade" && msg.data && msg.data.length > 0) {
+                const highest = Math.max(...msg.data.map(t => t.p));
+                priceElement.textContent = highest.toFixed(2);
+            }
+        });
+
+        socket.addEventListener("error", (e) => console.error("WebSocket error", e));
+
+        const unsubscribe = () => {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ type: "unsubscribe", symbol: stockSymbol }));
+                socket.close();
+            }
+        };
+        window.addEventListener("beforeunload", unsubscribe);
+        window.addEventListener("pagehide", unsubscribe);
+    </script>
+}
