@@ -1,0 +1,10 @@
+﻿namespace Sección_14___Configuration___HttpClient_Work_24.Options
+{
+    public class SocialMediaLinksOptions
+    {
+        public string? Facebook { get; set; }
+        public string? Instagram { get; set; }
+        public string? Twitter { get; set; }
+        public string? Youtube { get; set; }
+    }
+}

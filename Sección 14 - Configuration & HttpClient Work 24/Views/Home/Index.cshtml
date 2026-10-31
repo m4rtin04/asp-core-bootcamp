@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Social Media Links";
+}
+
+<h1 class="text-center margin-top margin-bottom">Social Media Links</h1>
+
+<div class="flex margin-auto w-75">
+    <div class="text-center">
+        <a href="@ViewBag.SocialMediaLinks.Facebook" target="_blank">Facebook</a>
+    </div>
+
+    <environment exclude="Development">
+        <div class="text-center">
+            <a href="@ViewBag.SocialMediaLinks.Instagram" target="_blank">Instagram</a>
+        </div>
+    </environment>
+
+    <div class="text-center">
+        <a href="@ViewBag.SocialMediaLinks.Twitter" target="_blank">Twitter</a>
+    </div>
+
+    <div class="text-center">
+        <a href="@ViewBag.SocialMediaLinks.Youtube" target="_blank">Youtube</a>
+    </div>
+</div>
