@@ -143,8 +143,22 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   * Registro del servicio con `AddSingleton` para conservar los datos en memoria entre peticiones.
   * **Pruebas unitarias con xUnit**: `[Fact]`, `[Theory]` con `[InlineData]` y `Assert.ThrowsAsync` para validar excepciones (`ArgumentNullException`, `ArgumentException`) y el comportamiento correcto del servicio.
 
+### - Sección 16: CRUDS Operations
+- **Proyecto:** Refactorización de la aplicación de Cotización de Acciones (Stocks App).
+- **Descripción:** Ampliación de la aplicación de las secciones 14 y 16 incorporando formularios para crear órdenes de compra y venta, una vista de listado de órdenes y navegación entre páginas, manteniendo el precio en vivo mediante WebSocket.
+- **Conceptos clave:**
+  * Nuevas acciones en `TradeController` con Attribute Routing: `Orders()` (GET), `BuyOrder()` y `SellOrder()` (POST).
+  * **Model Binding** con DTOs (`BuyOrderRequest`, `SellOrderRequest`), asignando la fecha en el controlador y revalidando con `ModelState.Clear()` y `TryValidateModel()`.
+  * Manejo de errores de validación devolviendo la vista `Index` con los datos recibidos mediante `View("Index", modelo)`, y patrón **Post/Redirect/Get** cuando la orden es válida.
+  * Nuevo view model `Orders` y vista fuertemente tipada `Trade/Orders.cshtml` con listados de compras y ventas.
+  * Formulario único con dos botones hacia rutas distintas mediante los tag helpers `asp-controller` y `asp-action`, y campos ocultos para enviar los datos de la orden.
+  * Actualización del precio oculto desde JavaScript para enviar siempre el valor más reciente del WebSocket.
+  * Lectura de `DefaultOrderQuantity` mediante el **Options Pattern**.
+  * Barra de navegación en `_Layout.cshtml` con resaltado del enlace activo.
+  * Formato de fechas y montos con `CultureInfo.InvariantCulture` y configuración de **Request Localization** (`en-US`) para el correcto enlace de decimales.
 
-### Sección 16: Próximamente
+
+### Sección 17: Próximamente
 ---
 ## 🛠️ Tecnologías y herramientas
 
