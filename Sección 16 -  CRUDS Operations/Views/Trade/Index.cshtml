@@ -1,0 +1,94 @@
+﻿@model StockTrade
+@{
+    ViewBag.Title = "Stock Price";
+    ViewBag.ActiveMenu = "Trade";
+}
+
+<div class="box margin-auto margin-top w-75">
+    <div class="flex-borderless">
+
+        <div class="w-50">
+            <h2 class="text-dark-grey">
+                @Model.StockName
+                <span class="text-grey">(@Model.StockSymbol)</span>
+            </h2>
+            <div class="margin-top price-container">
+                <span class="text-grey">$</span>
+                <span class="price">@Model.Price.ToString("F2", CultureInfo.InvariantCulture)</span>
+            </div>
+        </div>
+
+        <div class="w-30 border-left padding-left">
+            <h3 class="text-grey">New Order</h3>
+
+            @if (ViewBag.Errors is List<string> errors && errors.Any())
+            {
+                <ul class="text-red">
+                    @foreach (var error in errors)
+                    {
+                        <li>@error</li>
+                    }
+                </ul>
+            }
+
+            <form method="post">
+                <input type="hidden" id="StockSymbol" name="StockSymbol" value="@Model.StockSymbol" />
+                <input type="hidden" name="StockName" value="@Model.StockName" />
+                <input type="hidden" id="OrderPrice" name="Price"
+                       value="@Model.Price.ToString("F2", CultureInfo.InvariantCulture)" />
+
+                <label for="Quantity">Quantity:</label><br />
+                <input type="number" id="Quantity" name="Quantity" class="quantity-input"
+                       min="1" max="100000" value="@Model.Quantity" />
+
+                <div class="margin-top">
+                    <button type="submit" class="button button-sell"
+                            asp-controller="Trade" asp-action="SellOrder">
+                        ↓ Sell
+                    </button>
+                    <button type="submit" class="button button-buy"
+                            asp-controller="Trade" asp-action="BuyOrder">
+                        ↑ Buy
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        const token = "@ViewBag.FinnhubToken";
+        const stockSymbol = document.getElementById("StockSymbol").value;
+        const priceElement = document.querySelector(".price");
+        const orderPriceInput = document.getElementById("OrderPrice");
+
+        const socket = new WebSocket(`wss://ws.finnhub.io?token=${token}`);
+
+        socket.addEventListener("open", () => {
+            socket.send(JSON.stringify({ type: "subscribe", symbol: stockSymbol }));
+        });
+
+        socket.addEventListener("message", (event) => {
+            const msg = JSON.parse(event.data);
+
+            if (msg.type === "trade" && msg.data && msg.data.length > 0) {
+                const highest = Math.max(...msg.data.map(t => t.p)).toFixed(2);
+                priceElement.textContent = highest;
+                orderPriceInput.value = highest;   // el POST envía el precio actual
+            }
+        });
+
+        socket.addEventListener("error", (e) => console.error("WebSocket error", e));
+
+        const unsubscribe = () => {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ type: "unsubscribe", symbol: stockSymbol }));
+                socket.close();
+            }
+        };
+        window.addEventListener("beforeunload", unsubscribe);
+        window.addEventListener("pagehide", unsubscribe);
+    </script>
+}

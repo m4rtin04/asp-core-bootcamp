@@ -1,0 +1,12 @@
+﻿using Sección_16____CRUDS_Operations.DTO;
+
+namespace Sección_16____CRUDS_Operations.Models
+{
+    public class Orders
+    {
+        public List<BuyOrderResponse> BuyOrders { get; set; } = new List<BuyOrderResponse>();
+
+        public List<SellOrderResponse> SellOrders { get; set; } = new List<SellOrderResponse>();
+
+    }
+}
