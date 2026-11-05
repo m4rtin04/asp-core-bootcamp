@@ -129,8 +129,22 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   * Controlador con Attribute Routing (`Trade/Index`) y manejo seguro de respuestas con `TryGetValue`.
   * Conexión a un **WebSocket** desde JavaScript para actualizar el precio sin recargar la página, con cancelación de la suscripción al cerrar la página.
   * Uso de campos ocultos y secciones Razor (`@section`).
+ 
+### - Sección 15: xUnit
+- **Proyecto:** Refactorización de la aplicación de Cotización de Acciones (Stocks App).
+- **Descripción:** Ampliación de la aplicación de la Sección 14 incorporando entidades, DTOs y un servicio de órdenes de compra y venta, con validaciones declarativas y pruebas unitarias con xUnit.
+- **Conceptos clave:**
+  * Creación de las entidades `BuyOrder` y `SellOrder` con validaciones mediante **Data Annotations** (`[Required]` y `[Range]`).
+  * Uso del patrón **DTO** con clases Request y Response (`BuyOrderRequest`, `BuyOrderResponse`, `SellOrderRequest`, `SellOrderResponse`) para separar los datos de entrada y salida de los servicios.
+  * Creación de un atributo de validación personalizado (`MinimumDateAttribute`) y de un helper de validación basado en `Validator.TryValidateObject`.
+  * Definición de la interfaz `IStocksService` e implementación de `StocksService` con `CreateBuyOrder()`, `CreateSellOrder()`, `GetBuyOrders()` y `GetSellOrders()`, almacenando las órdenes en listas en memoria.
+  * Conversión entre entidades y DTOs mediante métodos de extensión.
+  * Inyección de `IStocksService`, `IFinnhubService` e `IOptions<TradingOptions>` en el controlador, sin exponer las entidades fuera de la capa de servicios.
+  * Registro del servicio con `AddSingleton` para conservar los datos en memoria entre peticiones.
+  * **Pruebas unitarias con xUnit**: `[Fact]`, `[Theory]` con `[InlineData]` y `Assert.ThrowsAsync` para validar excepciones (`ArgumentNullException`, `ArgumentException`) y el comportamiento correcto del servicio.
 
-### Sección 15: Próximamente
+
+### Sección 16: Próximamente
 ---
 ## 🛠️ Tecnologías y herramientas
 
