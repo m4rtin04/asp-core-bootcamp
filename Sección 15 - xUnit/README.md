@@ -1,4 +1,4 @@
-# Sección 16 - Entidades, DTOs y Pruebas Unitarias (Stocks App)
+# Sección 15 - Entidades, DTOs y Pruebas Unitarias (Stocks App)
 
 Ejercicio práctico de desarrollo web utilizando **ASP.NET Core MVC**, que amplía la aplicación de cotización de acciones con **modelos de entidad, DTOs, un servicio de órdenes de compra y venta**, validaciones con **Data Annotations** y **pruebas unitarias con xUnit**.
 
