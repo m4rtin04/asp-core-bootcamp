@@ -157,8 +157,20 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   * Barra de navegación en `_Layout.cshtml` con resaltado del enlace activo.
   * Formato de fechas y montos con `CultureInfo.InvariantCulture` y configuración de **Request Localization** (`en-US`) para el correcto enlace de decimales.
 
+### - Sección 17: Tag Helpers
+- **Proyecto:** Refactorización de la aplicación de Cotización de Acciones (Stocks App).
+- **Descripción:** Modificación de las vistas de la aplicación de las secciones 14, 16 y 17 para reemplazar el HTML escrito a mano por Tag Helpers, manteniendo la misma funcionalidad.
+- **Conceptos clave:**
+  * Uso de `asp-for` en inputs y labels para generar `id`, `name`, `value` y `type` a partir de las propiedades del modelo, evitando errores en el *model binding*.
+  * Uso de `asp-controller` y `asp-action` en enlaces y botones, generando rutas y atributos `formaction` hacia distintas acciones desde un mismo formulario.
+  * Uso de `asp-validation-summary` para mostrar los errores de `ModelState` sin armarlos manualmente en el controlador.
+  * Uso de `asp-format` para controlar el formato de los valores de los campos.
+  * Uso de `asp-append-version` para invalidar la caché del navegador cuando cambian los archivos estáticos.
+  * Habilitación de Tag Helpers con `@addTagHelper` en `_ViewImports.cshtml`.
+  * Actualización del JavaScript del WebSocket para adaptarse al `id` generado por `asp-for`.
+  * Simplificación del controlador al delegar la presentación de errores en la vista.
 
-### Sección 17: Próximamente
+### Sección 18: Próximamente
 ---
 ## 🛠️ Tecnologías y herramientas
 
