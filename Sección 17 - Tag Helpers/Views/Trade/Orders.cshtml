@@ -1,0 +1,69 @@
+﻿@model Orders
+@{
+    ViewBag.Title = "Orders";
+    ViewBag.ActiveMenu = "Orders";
+}
+
+<div class="flex margin-auto margin-top w-90">
+
+    <div class="w-50">
+        <h3 class="text-grey">Buy Orders</h3>
+
+        @if (!Model.BuyOrders.Any())
+        {
+            <p class="text-grey margin-top">
+                No buy orders yet.
+                <a asp-controller="Trade" asp-action="Index">Place one</a>
+            </p>
+        }
+
+        @foreach (var order in Model.BuyOrders)
+        {
+            <div class="order-item">
+                <div class="order-title">@order.StockName (@order.StockSymbol)</div>
+                <div class="order-small">
+                    <span class="text-grey">@order.Quantity shares at</span>
+                    <b>$@order.Price.ToString("N2", CultureInfo.InvariantCulture)</b>
+                </div>
+                <div class="order-small margin-top">
+                    <span class="text-grey">Trade Amount:</span>
+                    <b>$@order.TradeAmount.ToString("N2", CultureInfo.InvariantCulture)</b>
+                </div>
+                <div class="text-grey margin-top">
+                    @order.DateAndTimeOfOrder.ToString("dd MMMM yyyy hh:mm:ss tt", CultureInfo.InvariantCulture)
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="w-30">
+        <h3 class="text-grey">Sell Orders</h3>
+
+        @if (!Model.SellOrders.Any())
+        {
+            <p class="text-grey margin-top">
+                No sell orders yet.
+                <a asp-controller="Trade" asp-action="Index">Place one</a>
+            </p>
+        }
+
+        @foreach (var order in Model.SellOrders)
+        {
+            <div class="order-item">
+                <div class="order-title">@order.StockName (@order.StockSymbol)</div>
+                <div class="order-small">
+                    <span class="text-grey">@order.Quantity shares at</span>
+                    <b>$@order.Price.ToString("N2", CultureInfo.InvariantCulture)</b>
+                </div>
+                <div class="order-small margin-top">
+                    <span class="text-grey">Trade Amount:</span>
+                    <b>$@order.TradeAmount.ToString("N2", CultureInfo.InvariantCulture)</b>
+                </div>
+                <div class="text-grey margin-top">
+                    @order.DateAndTimeOfOrder.ToString("dd MMMM yyyy hh:mm:ss tt", CultureInfo.InvariantCulture)
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
