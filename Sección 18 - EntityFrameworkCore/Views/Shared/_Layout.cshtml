@@ -1,0 +1,40 @@
+﻿﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/StyleSheet.css" asp-append-version="true" />
+    <style>
+            .price-container { font-size: 2.5em; font-weight: bold; }
+            .button { color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 0.9em; }
+            .button-sell { background-color: #b83c14; }
+            .button-buy { background-color: #1e7e2e; }
+            .quantity-input { width: 100px; padding: 4px; font-size: 0.9em; }
+            .order-item { border-bottom: 1px solid #999; padding: 10px 0; }
+            .order-title { font-weight: bold; }
+            .order-small { font-size: 0.75em; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <span class="navbar-brand">Stocks</span>
+        <ul>
+            <li>
+                <a asp-controller="Trade" asp-action="Index"
+                   class="@(ViewBag.ActiveMenu == "Trade" ? "nav-active" : "")">Trade</a>
+            </li>
+            <li>
+                <a asp-controller="Trade" asp-action="Orders"
+                   class="@(ViewBag.ActiveMenu == "Orders" ? "nav-active" : "")">Orders</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

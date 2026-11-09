@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/Sección 18 - EntityFrameworkCore.Tests.csproj" />
+  </Folder>
+  <Project Path="Sección 18 - EntityFrameworkCore.csproj" />
+</Solution>
