@@ -169,8 +169,21 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   * Habilitación de Tag Helpers con `@addTagHelper` en `_ViewImports.cshtml`.
   * Actualización del JavaScript del WebSocket para adaptarse al `id` generado por `asp-for`.
   * Simplificación del controlador al delegar la presentación de errores en la vista.
+ 
+### - Sección 18: Entity Framework Core y Generación de PDF
+- **Proyecto:** Refactorización de la aplicación de Cotización de Acciones (Stocks App).
+- **Descripción:** Ampliación de la aplicación de las secciones anteriores para guardar las órdenes de compra y venta en una base de datos SQL Server mediante Entity Framework Core, y exportar el listado de órdenes en formato PDF.
+- **Conceptos clave:**
+  * Creación de `StockMarketDbContext` con `DbSet<BuyOrder>` y `DbSet<SellOrder>`, configurado con una cadena de conexión desde `appsettings.json` y registrado con `AddDbContext` y `UseSqlServer`.
+  * Refactorización de `StocksService` para usar el `DbContext` con `SaveChangesAsync()`, `ToListAsync()` y `AsNoTracking()`.
+  * Cambio del registro del servicio de `AddSingleton` a `AddScoped` por el ciclo de vida del `DbContext`.
+  * Creación de la base de datos y las tablas mediante **migraciones** de EF Core.
+  * Nueva acción `OrdersPDF()` y vista `OrdersPDF.cshtml` que generan un PDF con **Rotativa** (`ViewAsPdf`), con márgenes y orientación configurables.
+  * Vista sin layout y con estilos en línea para una correcta conversión a PDF.
+  * Combinación de las listas de compras y ventas en una sola tabla ordenada por fecha.
+  * Adaptación de las pruebas unitarias con xUnit usando el proveedor **EF Core InMemory**.
 
-### Sección 18: Próximamente
+### Sección 19: Próximamente
 ---
 ## 🛠️ Tecnologías y herramientas
 
