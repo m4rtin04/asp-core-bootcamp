@@ -1,0 +1,79 @@
+﻿@model Orders
+@{
+    Layout = null;
+
+    // Une compras y ventas en una sola lista, de la más reciente a la más antigua
+    var rows = Model.BuyOrders
+        .Select(o => (Date: o.DateAndTimeOfOrder, o.StockName, o.StockSymbol,
+                      Type: "BuyOrder", o.Quantity, o.Price, o.TradeAmount))
+        .Concat(Model.SellOrders
+        .Select(o => (Date: o.DateAndTimeOfOrder, o.StockName, o.StockSymbol,
+                      Type: "SellOrder", o.Quantity, o.Price, o.TradeAmount)))
+        .OrderByDescending(r => r.Date)
+        .ToList();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>OrdersPDF</title>
+    <style>
+            body {
+                font-family: 'Segoe UI', Tahoma, sans-serif;
+                font-size: 14px;
+            }
+
+            h1 {
+                margin-bottom: 10px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            th {
+                background-color: #b8d4c0;
+                text-align: left;
+                padding: 6px 10px;
+            }
+
+            td {
+                padding: 6px 10px;
+            }
+
+            tbody tr:nth-child(odd) {
+                background-color: #efefef;
+            }
+    </style>
+</head>
+<body>
+    <h1>Orders</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date and Time</th>
+                <th>Stock</th>
+                <th>Order Type</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Trade Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in rows)
+            {
+                <tr>
+                    <td>@r.Date.ToString("dd MMMM yyyy hh:mm:ss tt", CultureInfo.InvariantCulture)</td>
+                    <td>@r.StockName (@r.StockSymbol)</td>
+                    <td>@r.Type</td>
+                    <td>@r.Quantity</td>
+                    <td>$ @r.Price.ToString("N2", CultureInfo.InvariantCulture)</td>
+                    <td>@r.TradeAmount.ToString("N2", CultureInfo.InvariantCulture)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>
