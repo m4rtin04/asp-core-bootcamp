@@ -182,8 +182,23 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   * Vista sin layout y con estilos en línea para una correcta conversión a PDF.
   * Combinación de las listas de compras y ventas en una sola tabla ordenada por fecha.
   * Adaptación de las pruebas unitarias con xUnit usando el proveedor **EF Core InMemory**.
+ 
+### - Sección 19: Advanced Unit Testing: Moq & Repository Pattern
+- **Proyecto:** Refactorización de la aplicación de Cotización de Acciones (Stocks App).
+- **Descripción:** Reorganización de la aplicación de las secciones anteriores en una arquitectura de 4 capas con repositorios, incorporación de una página para explorar acciones populares con un View Component de detalle, y ampliación de las pruebas con Moq, AutoFixture, FluentAssertions y tests de integración.
+- **Conceptos clave:**
+  * Arquitectura de 4 capas: **UI, BLL, Repository Layer y Data Access Layer**.
+  * Implementación del **Patrón Repositorio** (`IFinnhubRepository`, `IStocksRepository`) y servicios que delegan en los repositorios.
+  * Consumo de nuevos endpoints de Finnhub (`GetStocks`, `SearchStocks`) con `Uri.EscapeDataString` y verificación del código de estado HTTP.
+  * Nuevo `StocksController` con la acción `Explore()` y ruta con parámetro opcional (`Stocks/Explore/{stock?}`).
+  * Filtrado de las acciones populares mediante `Top25PopularStocks`, leído con el **Options Pattern**.
+  * Creación de `SelectedStockViewComponent` e invocación con `Component.InvokeAsync` para mostrar el detalle de la acción seleccionada.
+  * Navegación entre Explore y Trade con `asp-route-*` y cambio de ruta de `Trade/Index` para recibir el símbolo.
+  * Pruebas unitarias con **Moq** para simular repositorios y servicios, **AutoFixture** para generar datos y **FluentAssertions** para las aserciones.
+  * Pruebas de **integración** con `WebApplicationFactory`, HtmlAgilityPack y un repositorio falso para aislar la API externa.
 
-### Sección 19: Próximamente
+
+### Sección 20: Próximamente
 ---
 ## 🛠️ Tecnologías y herramientas
 
