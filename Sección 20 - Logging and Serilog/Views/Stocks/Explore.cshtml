@@ -1,0 +1,26 @@
+﻿@model List<Stock>
+@{
+    ViewBag.Title = "Explore";
+    ViewBag.ActiveMenu = "Explore";
+}
+
+<div class="explore-grid margin-top">
+
+    <div class="box stock-list">
+        <h4 class="text-grey margin-bottom">Stocks</h4>
+
+        @foreach (var stock in Model)
+        {
+            <a class="stock-item" asp-controller="Stocks" asp-action="Explore"
+               asp-route-stock="@stock.StockSymbol">
+                <b>@stock.StockName?.ToUpper()</b><br />
+                <span class="text-grey">(@stock.StockSymbol)</span>
+            </a>
+        }
+    </div>
+
+    <div class="stock-detail">
+        @await Component.InvokeAsync("SelectedStock", new { stockSymbol = (string?)ViewBag.Stock })
+    </div>
+
+</div>
