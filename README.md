@@ -196,6 +196,19 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   * Navegación entre Explore y Trade con `asp-route-*` y cambio de ruta de `Trade/Index` para recibir el símbolo.
   * Pruebas unitarias con **Moq** para simular repositorios y servicios, **AutoFixture** para generar datos y **FluentAssertions** para las aserciones.
   * Pruebas de **integración** con `WebApplicationFactory`, HtmlAgilityPack y un repositorio falso para aislar la API externa.
+ 
+ ### - Sección 20: Logging and Serilog
+- **Proyecto:** Refactorización de la aplicación de Cotización de Acciones (Stocks App).
+- **Descripción:** Ampliación de la aplicación de la Sección 19 incorporando registro de eventos con Serilog en controladores y servicios, sin modificar la funcionalidad existente.
+- **Conceptos clave:**
+  * Instalación y configuración de **Serilog.AspNetCore** con sinks de consola y archivo (un archivo por día), definidos en la sección `Serilog` de `appsettings.json`.
+  * Integración con `UseSerilog` y registro de peticiones HTTP con `UseSerilogRequestLogging()`.
+  * Uso de la abstracción `ILogger<T>` inyectada en `TradeController`, `StocksController` y `StocksService`, evitando depender de Serilog directamente.
+  * Uso de niveles de log (`Debug`, `Information`, `Warning`) y de `Override` para silenciar el ruido de ASP.NET Core y EF Core.
+  * Registro estructurado con plantillas de mensaje en lugar de interpolación de cadenas.
+  * Buenas prácticas de seguridad: no registrar tokens ni URLs que contengan secretos.
+  * Adaptación de las pruebas unitarias con `NullLogger<T>`.
+  * Exclusión de los archivos de log del repositorio con `.gitignore`.
 
 
 ### Sección 20: Próximamente
