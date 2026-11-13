@@ -209,9 +209,24 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   * Buenas prácticas de seguridad: no registrar tokens ni URLs que contengan secretos.
   * Adaptación de las pruebas unitarias con `NullLogger<T>`.
   * Exclusión de los archivos de log del repositorio con `.gitignore`.
+ 
+### - Sección 21: Filters
+- **Proyecto:** Refactorización de la aplicación de Cotización de Acciones (Stocks App).
+- **Descripción:** Ampliación de la aplicación de la Sección 20 incorporando un filtro de acción asíncrono que valida las órdenes de compra y venta antes de ejecutar la acción, y adaptación de la interfaz a una nueva hoja de estilos.
+- **Conceptos clave:**
+  * Introducción al pipeline de filtros y tipos de filtros: Action, Result, Resource, Authorization y Exception.
+  * Creación de `CreateOrderActionFilter` con `IAsyncActionFilter`, aplicado a `BuyOrder()` y `SellOrder()` mediante `[TypeFilter]`.
+  * Lectura de los argumentos de la acción con `ActionArguments` y validación de parámetros dentro del filtro.
+  * Cortocircuito (*short-circuiting*) del pipeline asignando `context.Result` para devolver la vista `Index` con los errores.
+  * Uso de una clase base (`OrderRequest`) para compartir validaciones entre DTOs.
+  * Filtros con dependencias: `TypeFilter` frente a `ServiceFilter`.
+  * Otros temas vistos: filtros globales, orden de filtros (`IOrderedFilter`), `IAlwaysRunResultFilter`, sobrescritura de filtros, `IFilterFactory` y diferencias entre filtros y middleware.
+  * Registro de eventos con `ILogger` y Serilog dentro del filtro.
+  * Adaptación de layout y vistas a una nueva hoja de estilos.
 
 
-### Sección 20: Próximamente
+
+### Sección 22: Próximamente
 ---
 ## 🛠️ Tecnologías y herramientas
 
