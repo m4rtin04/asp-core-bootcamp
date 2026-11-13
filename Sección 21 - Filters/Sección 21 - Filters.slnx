@@ -1,0 +1,4 @@
+<Solution>
+	<Project Path="Sección 21 - Filters.csproj" />
+  <Project Path="Tests/Tests.csproj" />
+</Solution>

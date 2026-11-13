@@ -1,0 +1,45 @@
+﻿@model StockTrade
+@{
+    ViewBag.Title = "Stock Price";
+    ViewBag.ActiveMenu = "Trade";
+}
+
+<div class="box trading-panel">
+    <div class="flex trading-panel-flex">
+
+        <div id="stock-price-panel">
+            <div class="stock-title">@Model.StockName (@Model.StockSymbol)</div>
+            <div class="stock-price">
+                <span class="text-grey">$</span>
+                <span class="price">@Model.Price.ToString("F2", CultureInfo.InvariantCulture)</span>
+            </div>
+        </div>
+
+        <div id="new-order-panel">
+            <div class="text-grey">New Order</div>
+
+            <div asp-validation-summary="All" class="text-red"></div>
+
+            <form method="post">
+                <input type="hidden" asp-for="StockSymbol" />
+                <input type="hidden" asp-for="StockName" />
+                <input type="hidden" asp-for="Price" asp-format="{0:F2}" />
+
+                <label asp-for="Quantity"></label><br />
+                <input asp-for="Quantity" class="form-input" style="width:120px" min="1" max="100000" />
+
+                <div class="button-panel">
+                    <button type="submit" class="button button-red-back"
+                            asp-controller="Trade" asp-action="SellOrder">
+                        ↓ Sell
+                    </button>
+                    <button type="submit" class="button button-green-back"
+                            asp-controller="Trade" asp-action="BuyOrder">
+                        ↑ Buy
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/StyleSheet.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="container">
+        <div class="flex" id="top-bar-div">
+            <div class="flex-1">
+                <h1 class="app-title">Stocks</h1>
+            </div>
+            <div class="flex-1" id="search-box-div">
+                <input type="search" class="search-text" placeholder="Search Stocks" />
+            </div>
+        </div>
+
+        <div class="navbar">
+            <ul>
+                <li>
+                    <a asp-controller="Stocks" asp-action="Explore"
+                       class="@(ViewBag.ActiveMenu == "Explore" ? "nav-active" : "")">Explore</a>
+                    <a asp-controller="Trade" asp-action="Index"
+                       class="@(ViewBag.ActiveMenu == "Trade" ? "nav-active" : "")">Trade</a>
+                    <a asp-controller="Trade" asp-action="Orders"
+                       class="@(ViewBag.ActiveMenu == "Orders" ? "nav-active" : "")">Orders</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="page-content">
+            @RenderBody()
+        </div>
+    </div>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
