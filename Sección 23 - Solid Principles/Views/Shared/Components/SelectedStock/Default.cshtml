@@ -1,0 +1,23 @@
+﻿@model StockDetails
+
+<div class="box">
+    @if (!string.IsNullOrEmpty(Model.Logo))
+    {
+        <img src="@Model.Logo" alt="@Model.StockName" style="width:150px;height:150px;object-fit:contain;background:#000" />
+    }
+
+    <div class="stock-title">@Model.StockName (@Model.StockSymbol)</div>
+
+    <div><span class="pill">@Model.Industry</span></div>
+    <div><b>Exchange:</b> <span class="pill">@Model.Exchange</span></div>
+
+    <div class="stock-price">
+        <span class="text-grey">$</span>
+        <span class="price">@Model.Price.ToString("F2", CultureInfo.InvariantCulture)</span>
+    </div>
+
+    <div class="button-panel">
+        <a asp-controller="Trade" asp-action="Index" asp-route-stockSymbol="@Model.StockSymbol"
+           class="button-link button-blue-back">Trade Now</a>
+    </div>
+</div>

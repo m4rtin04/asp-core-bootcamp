@@ -1,0 +1,44 @@
+﻿@model Orders
+@{
+    ViewBag.Title = "Orders";
+    ViewBag.ActiveMenu = "Orders";
+}
+
+<div class="flex orders-list">
+
+    <div id="buy-orders-list" class="box">
+        <div class="text-grey">Buy Orders</div>
+
+        @if (!Model.BuyOrders.Any())
+        {
+            <p class="text-grey mt">
+                No buy orders yet. <a asp-controller="Trade" asp-action="Index">Place one</a>
+            </p>
+        }
+
+        <ul class="list list-container">
+            @foreach (var order in Model.BuyOrders)
+            {
+                <li>
+                    <b>@order.StockName (@order.StockSymbol)</b><br />
+                    <span class="text-grey">@order.Quantity shares at</span>
+                    <b>$@order.Price.ToString("N2", CultureInfo.InvariantCulture)</b><br />
+                    <span class="text-grey">Trade Amount:</span>
+                    <b>$@order.TradeAmount.ToString("N2", CultureInfo.InvariantCulture)</b><br />
+                    <span class="text-grey">
+                        @order.DateAndTimeOfOrder.ToString("dd MMMM yyyy hh:mm:ss tt", CultureInfo.InvariantCulture)
+                    </span>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div id="sell-orders-list" class="box">
+        @* Igual que el bloque anterior, con Model.SellOrders y los textos "Sell Orders" / "No sell orders yet." *@
+    </div>
+
+</div>
+
+<div class="mt">
+    <a asp-controller="Trade" asp-action="OrdersPDF" class="button-link button-blue-back">Download as PDF</a>
+</div>
