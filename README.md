@@ -1,4 +1,3 @@
-# asp-core-bootcamp
 # Curso de ASP.NET Core (.NET 10) - Harsha
 
 Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo largo del curso de ASP.NET Core de Harsha.
@@ -224,9 +223,21 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   * Registro de eventos con `ILogger` y Serilog dentro del filtro.
   * Adaptación de layout y vistas a una nueva hoja de estilos.
 
+### - Sección 22: Error Handling
+- **Proyecto:** Refactorización de la aplicación de Cotización de Acciones (Stocks App).
+- **Descripción:** Ampliación de la aplicación de la Sección 21 incorporando manejo centralizado de errores: una excepción personalizada para las fallas de Finnhub, un middleware propio que registra y relanza las excepciones, y `UseExceptionHandler` para mostrar una vista de error amigable en entornos distintos de Development.
+- **Conceptos clave:**
+  * Creación de la excepción personalizada `FinnhubException`, conservando la causa original en `InnerException`.
+  * Envoltura de las fallas del repositorio en `FinnhubService` mediante un método genérico auxiliar, evitando repetir el `try/catch`.
+  * Creación de `ExceptionHandlingMiddleware` y de su método de extensión; registro de la excepción y relanzado con `throw;` para conservar el *stack trace*.
+  * Uso de `UseExceptionHandler("/Home/Error")` e `IExceptionHandlerPathFeature`, con `HomeController` y la vista `Error.cshtml`.
+  * Importancia del orden de los middlewares: el manejador integrado debe ir antes del middleware que relanza.
+  * Configuración del pipeline según el entorno: `UseDeveloperExceptionPage()` en Development y manejo amigable en el resto.
+  * Buenas prácticas de seguridad: registrar los detalles en el log sin mostrarlos al usuario.
 
 
-### Sección 22: Próximamente
+
+### Sección 23: Próximamente
 ---
 ## 🛠️ Tecnologías y herramientas
 
