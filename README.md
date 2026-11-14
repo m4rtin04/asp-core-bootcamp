@@ -235,6 +235,16 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   * Configuración del pipeline según el entorno: `UseDeveloperExceptionPage()` en Development y manejo amigable en el resto.
   * Buenas prácticas de seguridad: registrar los detalles en el log sin mostrarlos al usuario.
 
+### - Sección 24: Principios SOLID
+- **Proyecto:** Refactorización de la aplicación de Cotización de Acciones (Stocks App).
+- **Descripción:** Reorganización del código de la Sección 22 aplicando los principios SOLID, sin cambiar el comportamiento de la aplicación. Se divide el servicio de Finnhub en cuatro servicios pequeños, cada uno con su propia interfaz.
+- **Conceptos clave:**
+  * Visión general de los principios SOLID: SRP, OCP, LSP, ISP y DIP.
+  * **Segregación de interfaces (ISP):** reemplazo de `IFinnhubService` por `IFinnhubCompanyProfileService`, `IFinnhubStockPriceQuoteService`, `IFinnhubStocksService` e `IFinnhubSearchStocksService`.
+  * **Responsabilidad única (SRP):** un servicio por operación y un método auxiliar (`FinnhubCall`) para el manejo de errores compartido.
+  * **Inversión de dependencias (DIP):** controladores y View Component que dependen de interfaces registradas en el contenedor de DI.
+  * **Abierto/Cerrado (OCP) y Liskov (LSP):** extensión por nuevas clases sin modificar las existentes, y herencia de DTOs (`OrderRequest`) sin alterar el comportamiento.
+  * ISP en las pruebas: mocks de interfaces mínimas con Moq.
 
 
 ### Sección 23: Próximamente
