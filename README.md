@@ -1,4 +1,4 @@
-# Curso de ASP.NET Core (.NET 10) - Harsha
+# Curso de ASP.NET Core (.NET 10)
 
 Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo largo del curso de ASP.NET Core de Harsha.
 
@@ -246,8 +246,20 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   * **Abierto/Cerrado (OCP) y Liskov (LSP):** extensión por nuevas clases sin modificar las existentes, y herencia de DTOs (`OrderRequest`) sin alterar el comportamiento.
   * ISP en las pruebas: mocks de interfaces mínimas con Moq.
 
+### - Sección 24: Clean Architecture
+- **Proyecto:** Refactorización de la aplicación de Cotización de Acciones (Stocks App).
+- **Descripción:** Reorganización de la solución de la Sección 24 en tres proyectos siguiendo Clean Architecture (Core, Infrastructure y UI), sin cambiar el comportamiento de la aplicación.
+- **Conceptos clave:**
+  * Visión general de Clean Architecture y la regla de dependencias: las referencias apuntan hacia adentro.
+  * Proyecto **Core** con servicios, DTOs, excepciones y un núcleo **Domain** con entidades y contratos de repositorio, sin referencias a otros proyectos.
+  * Proyecto **Infrastructure** con `DbContext`, repositorios y llamadas a la API externa, implementando los contratos definidos en Core.
+  * Proyecto **UI** con controladores, filtros, middleware, view models y vistas.
+  * Inversión de dependencias a nivel de proyecto: los contratos viven en Core y las implementaciones en Infrastructure.
+  * Método de extensión (`ConfigureServicesExtension`) para registrar los servicios y mantener `Program.cs` limpio.
+  * Migraciones de EF Core con `--project` y `--startup-project` al separar el `DbContext` de la UI.
+  * Actualización de namespaces y referencias entre proyectos, incluido el proyecto de pruebas.
 
-### Sección 23: Próximamente
+### Sección 25: Próximamente
 ---
 ## 🛠️ Tecnologías y herramientas
 
