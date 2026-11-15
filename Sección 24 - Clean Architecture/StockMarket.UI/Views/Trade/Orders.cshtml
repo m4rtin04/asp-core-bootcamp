@@ -1,37 +1,44 @@
 @model Orders
-@{ ViewBag.Title = "Orders"; }
+@{
+    ViewBag.Title = "Orders";
+    ViewBag.ActiveMenu = "Orders";
+}
 
-<div class="orders-header">
-    <h2>Orders</h2>
-    <a class="button button-blue-back" asp-controller="Trade" asp-action="OrdersPDF">Download as PDF</a>
+<div class="flex orders-list">
+
+    <div id="buy-orders-list" class="box">
+        <div class="text-grey">Buy Orders</div>
+
+        @if (!Model.BuyOrders.Any())
+        {
+            <p class="text-grey mt">
+                No buy orders yet. <a asp-controller="Trade" asp-action="Index">Place one</a>
+            </p>
+        }
+
+        <ul class="list list-container">
+            @foreach (var order in Model.BuyOrders)
+            {
+                <li>
+                    <b>@order.StockName (@order.StockSymbol)</b><br />
+                    <span class="text-grey">@order.Quantity shares at</span>
+                    <b>$@order.Price.ToString("N2", CultureInfo.InvariantCulture)</b><br />
+                    <span class="text-grey">Trade Amount:</span>
+                    <b>$@order.TradeAmount.ToString("N2", CultureInfo.InvariantCulture)</b><br />
+                    <span class="text-grey">
+                        @order.DateAndTimeOfOrder.ToString("dd MMMM yyyy hh:mm:ss tt", CultureInfo.InvariantCulture)
+                    </span>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div id="sell-orders-list" class="box">
+        @* Igual que el bloque anterior, con Model.SellOrders y los textos "Sell Orders" / "No sell orders yet." *@
+    </div>
+
 </div>
 
-<div class="orders-grid">
-    <section class="card">
-        <h3>Buy Orders</h3>
-        @foreach (var order in Model.BuyOrders)
-        {
-            <div class="order-box">
-                <div class="order-title">@order.StockName (@order.StockSymbol)</div>
-                <div>@order.Quantity shares @@ $@order.Price.ToString("0.00")</div>
-                <div class="order-date">@order.DateAndTimeOfOrder.ToString("dd MMM yyyy, hh:mm tt")</div>
-                <div class="order-amount">Trade amount: $@order.TradeAmount.ToString("N2")</div>
-            </div>
-        }
-        @if (Model.BuyOrders.Count == 0) { <p class="empty">No buy orders yet.</p> }
-    </section>
-
-    <section class="card">
-        <h3>Sell Orders</h3>
-        @foreach (var order in Model.SellOrders)
-        {
-            <div class="order-box">
-                <div class="order-title">@order.StockName (@order.StockSymbol)</div>
-                <div>@order.Quantity shares @@ $@order.Price.ToString("0.00")</div>
-                <div class="order-date">@order.DateAndTimeOfOrder.ToString("dd MMM yyyy, hh:mm tt")</div>
-                <div class="order-amount">Trade amount: $@order.TradeAmount.ToString("N2")</div>
-            </div>
-        }
-        @if (Model.SellOrders.Count == 0) { <p class="empty">No sell orders yet.</p> }
-    </section>
+<div class="mt">
+    <a asp-controller="Trade" asp-action="OrdersPDF" class="button-link button-blue-back">Download as PDF</a>
 </div>

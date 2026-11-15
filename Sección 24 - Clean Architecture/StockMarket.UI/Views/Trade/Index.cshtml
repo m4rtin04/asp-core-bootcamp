@@ -1,68 +1,45 @@
 @model StockTrade
-@{ ViewBag.Title = "Trade"; }
-
-<div class="card trade-card">
-    <h2 class="stock-title">
-        <span class="stock-name">@Model.StockName</span>
-        (<span class="stock-symbol">@Model.StockSymbol</span>)
-    </h2>
-
-    <p class="price-label">Current price: $<span class="price">@Model.Price.ToString("0.00")</span></p>
-
-    @if (ViewBag.Errors != null)
-    {
-        <ul class="errors">
-            @foreach (string error in ViewBag.Errors)
-            {
-                <li>@error</li>
-            }
-        </ul>
-    }
-
-    <form asp-controller="Trade" asp-action="BuyOrder" method="post">
-        <input type="hidden" asp-for="StockSymbol" id="StockSymbol" />
-        <input type="hidden" asp-for="StockName" />
-        <input type="hidden" asp-for="Price" id="Price" />
-
-        <div class="form-row">
-            <label asp-for="Quantity">Quantity:</label>
-            <input asp-for="Quantity" min="1" max="100000" />
-        </div>
-
-        <div class="buttons">
-            <button type="submit" class="button button-green-back">Buy</button>
-            <button type="submit" asp-controller="Trade" asp-action="SellOrder" class="button button-red-back">Sell</button>
-        </div>
-    </form>
-</div>
-
-@section scripts {
-<script>
-    const token = "@ViewBag.FinnhubToken";
-    const symbol = document.getElementById("StockSymbol").value;
-    const socket = new WebSocket(`wss://ws.finnhub.io?token=${token}`);
-
-    socket.addEventListener("open", () => {
-        socket.send(JSON.stringify({ type: "subscribe", symbol: symbol }));
-    });
-
-    socket.addEventListener("message", (event) => {
-        const message = JSON.parse(event.data);
-        if (message.type !== "trade" || !message.data || message.data.length === 0) return;
-
-        // Si llegan varios trades en el mismo mensaje se muestra el precio más alto.
-        const latest = Math.max(...message.data.map(t => t.p));
-        document.querySelector(".price").textContent = latest.toFixed(2);
-        document.getElementById("Price").value = latest.toFixed(2);
-    });
-
-    function unsubscribe() {
-        if (socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({ type: "unsubscribe", symbol: symbol }));
-            socket.close();
-        }
-    }
-    window.addEventListener("beforeunload", unsubscribe);
-    window.addEventListener("pagehide", unsubscribe);
-</script>
+@{
+    ViewBag.Title = "Stock Price";
+    ViewBag.ActiveMenu = "Trade";
 }
+
+<div class="box trading-panel">
+    <div class="flex trading-panel-flex">
+
+        <div id="stock-price-panel">
+            <div class="stock-title">@Model.StockName (@Model.StockSymbol)</div>
+            <div class="stock-price">
+                <span class="text-grey">$</span>
+                <span class="price">@Model.Price.ToString("F2", CultureInfo.InvariantCulture)</span>
+            </div>
+        </div>
+
+        <div id="new-order-panel">
+            <div class="text-grey">New Order</div>
+
+            <div asp-validation-summary="All" class="text-red"></div>
+
+            <form method="post">
+                <input type="hidden" asp-for="StockSymbol" />
+                <input type="hidden" asp-for="StockName" />
+                <input type="hidden" asp-for="Price" asp-format="{0:F2}" />
+
+                <label asp-for="Quantity"></label><br />
+                <input asp-for="Quantity" class="form-input" style="width:120px" min="1" max="100000" />
+
+                <div class="button-panel">
+                    <button type="submit" class="button button-red-back"
+                            asp-controller="Trade" asp-action="SellOrder">
+                        ↓ Sell
+                    </button>
+                    <button type="submit" class="button button-green-back"
+                            asp-controller="Trade" asp-action="BuyOrder">
+                        ↑ Buy
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

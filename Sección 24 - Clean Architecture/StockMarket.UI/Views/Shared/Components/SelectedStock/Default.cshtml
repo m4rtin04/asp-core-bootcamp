@@ -1,17 +1,23 @@
-@model Dictionary<string, string>
+@model StockDetails
 
-<div class="card selected-card">
-    @if (Model.TryGetValue("logo", out var logo) && !string.IsNullOrEmpty(logo))
+<div class="box">
+    @if (!string.IsNullOrEmpty(Model.Logo))
     {
-        <img src="@logo" alt="logo" class="stock-logo" />
+        <img src="@Model.Logo" alt="@Model.StockName" style="width:150px;height:150px;object-fit:contain;background:#000" />
     }
-    <h2>@(Model.GetValueOrDefault("name"))</h2>
-    <p><strong>Symbol:</strong> @(Model.GetValueOrDefault("ticker"))</p>
-    <p><strong>Industry:</strong> @(Model.GetValueOrDefault("finnhubIndustry"))</p>
-    <p><strong>Exchange:</strong> @(Model.GetValueOrDefault("exchange"))</p>
-    <p><strong>Country:</strong> @(Model.GetValueOrDefault("country"))</p>
-    <p class="price-label">Price: $@(Model.GetValueOrDefault("price"))</p>
 
-    <a class="button button-blue-back" asp-controller="Trade" asp-action="Index"
-       asp-route-stockSymbol="@(Model.GetValueOrDefault("ticker"))">Buy / Sell</a>
+    <div class="stock-title">@Model.StockName (@Model.StockSymbol)</div>
+
+    <div><span class="pill">@Model.Industry</span></div>
+    <div><b>Exchange:</b> <span class="pill">@Model.Exchange</span></div>
+
+    <div class="stock-price">
+        <span class="text-grey">$</span>
+        <span class="price">@Model.Price.ToString("F2", CultureInfo.InvariantCulture)</span>
+    </div>
+
+    <div class="button-panel">
+        <a asp-controller="Trade" asp-action="Index" asp-route-stockSymbol="@Model.StockSymbol"
+           class="button-link button-blue-back">Trade Now</a>
+    </div>
 </div>

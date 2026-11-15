@@ -6,6 +6,7 @@ namespace StockMarket.Infrastructure.Repositories;
 
 public class FinnhubRepository : IFinnhubRepository
 {
+    private const string BaseUrl = "https://finnhub.io/api/v1";
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IConfiguration _configuration;
 
@@ -15,37 +16,44 @@ public class FinnhubRepository : IFinnhubRepository
         _configuration = configuration;
     }
 
-    // El token se guarda en user-secrets: dotnet user-secrets set "FinnhubToken" "..."
-    private string Token => _configuration["FinnhubToken"]
-        ?? throw new InvalidOperationException("FinnhubToken is not configured (use user-secrets).");
+    private string Token => Uri.EscapeDataString(_configuration["FinnhubToken"] ?? "");
 
-    private async Task<T?> GetAsync<T>(string url)
+    public Task<Dictionary<string, object>?> GetCompanyProfile(string stockSymbol)
+        => GetDictionaryAsync($"{BaseUrl}/stock/profile2?symbol={Uri.EscapeDataString(stockSymbol)}&token={Token}");
+
+    public Task<Dictionary<string, object>?> GetStockPriceQuote(string stockSymbol)
+        => GetDictionaryAsync($"{BaseUrl}/quote?symbol={Uri.EscapeDataString(stockSymbol)}&token={Token}");
+
+    public Task<Dictionary<string, object>?> SearchStocks(string stockSymbolToSearch)
+        => GetDictionaryAsync($"{BaseUrl}/search?q={Uri.EscapeDataString(stockSymbolToSearch)}&token={Token}");
+
+    public async Task<List<Dictionary<string, string>>?> GetStocks()
     {
-        using var client = _httpClientFactory.CreateClient();
-        using var response = await client.GetAsync(url);
-        var body = await response.Content.ReadAsStringAsync();
-
-        var result = JsonSerializer.Deserialize<T>(body);
-
-        if (result is Dictionary<string, object> dict && dict.TryGetValue("error", out var error))
-            throw new InvalidOperationException(Convert.ToString(error));
-
-        return result;
+        string body = await GetJsonAsync($"{BaseUrl}/stock/symbol?exchange=US&token={Token}");
+        return JsonSerializer.Deserialize<List<Dictionary<string, string>>>(body);
     }
 
-    public Task<Dictionary<string, object>?> GetCompanyProfile(string stockSymbol) =>
-        GetAsync<Dictionary<string, object>>(
-            $"https://finnhub.io/api/v1/stock/profile2?symbol={Uri.EscapeDataString(stockSymbol)}&token={Token}");
+    private async Task<Dictionary<string, object>?> GetDictionaryAsync(string url)
+    {
+        string body = await GetJsonAsync(url);
+        var dict = JsonSerializer.Deserialize<Dictionary<string, object>>(body)
+                   ?? throw new InvalidOperationException("No response from finnhub server");
 
-    public Task<Dictionary<string, object>?> GetStockPriceQuote(string stockSymbol) =>
-        GetAsync<Dictionary<string, object>>(
-            $"https://finnhub.io/api/v1/quote?symbol={Uri.EscapeDataString(stockSymbol)}&token={Token}");
+        if (dict.TryGetValue("error", out var error) && error != null)
+            throw new InvalidOperationException(Convert.ToString(error));
 
-    public Task<List<Dictionary<string, string>>?> GetStocks() =>
-        GetAsync<List<Dictionary<string, string>>>(
-            $"https://finnhub.io/api/v1/stock/symbol?exchange=US&token={Token}");
+        return dict;
+    }
 
-    public Task<Dictionary<string, object>?> SearchStocks(string stockSymbolToSearch) =>
-        GetAsync<Dictionary<string, object>>(
-            $"https://finnhub.io/api/v1/search?q={Uri.EscapeDataString(stockSymbolToSearch)}&token={Token}");
+    private async Task<string> GetJsonAsync(string url)
+    {
+        var client = _httpClientFactory.CreateClient();
+        using var response = await client.GetAsync(url);
+        string body = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+            throw new InvalidOperationException($"Finnhub returned {(int)response.StatusCode}: {body}");
+
+        return body;
+    }
 }

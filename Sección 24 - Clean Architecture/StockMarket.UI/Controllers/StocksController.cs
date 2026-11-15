@@ -2,43 +2,54 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using StockMarket.Core.ServiceContracts;
 using StockMarket.UI.Models;
+using StockMarket.UI.Options;
 
 namespace StockMarket.UI.Controllers;
 
 [Route("[controller]")]
 public class StocksController : Controller
 {
-    private readonly IFinnhubStocksService _finnhubStocksService;
     private readonly TradingOptions _tradingOptions;
     private readonly ILogger<StocksController> _logger;
+    private readonly IFinnhubStocksService _finnhubStocksService;
 
-    public StocksController(
-        IFinnhubStocksService finnhubStocksService,
-        IOptions<TradingOptions> tradingOptions,
-        ILogger<StocksController> logger)
+    public StocksController(IOptions<TradingOptions> tradingOptions, IFinnhubStocksService finnhubStocksService, ILogger<StocksController> logger)
     {
-        _finnhubStocksService = finnhubStocksService;
         _tradingOptions = tradingOptions.Value;
+        _finnhubStocksService = finnhubStocksService;
         _logger = logger;
     }
 
+    [Route("Stocks/Explore/{stock?}")]
     [HttpGet]
-    [Route("[action]/{stock?}")]
-    [Route("~/[controller]/explore/{stock?}")]
     public async Task<IActionResult> Explore(string? stock)
     {
-        _logger.LogInformation("Stocks/Explore requested. Selected stock: {Stock}", stock);
+        _logger.LogInformation("Stocks/Explore requested. Selected stock: {Stock}", stock ?? "(none)");
 
-        var allStocks = await _finnhubStocksService.GetStocks();
-        var popular = (_tradingOptions.Top25PopularStocks ?? string.Empty)
-            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        List<Dictionary<string, string>>? allStocks = await _finnhubStocksService.GetStocks();
+        var stocks = new List<Stock>();
 
-        var stocks = allStocks?
-            .Where(s => s.ContainsKey("symbol") && popular.Contains(s["symbol"]))
-            .Select(s => new Stock { StockName = s["description"], StockSymbol = s["symbol"] })
-            .ToList() ?? new List<Stock>();
+        if (allStocks != null)
+        {
+            var top25 = (_tradingOptions.Top25PopularStocks ?? "")
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-        ViewBag.stock = stock;
+            stocks = allStocks
+                .Where(s => s.TryGetValue("symbol", out var symbol) && symbol != null && top25.Contains(symbol))
+                .Select(s => new Stock
+                {
+                    StockSymbol = s["symbol"],
+                    StockName = s.GetValueOrDefault("description")
+                })
+                .ToList();
+        }
+
+        ViewBag.Stock = stock;
+
+        _logger.LogDebug("Explore returned {Count} popular stocks", stocks.Count);
+
         return View(stocks);
     }
+
 }

@@ -10,21 +10,24 @@ public class TradeControllerIntegrationTests : IClassFixture<WebApplicationFacto
 {
     private readonly HttpClient _client;
 
-    public TradeControllerIntegrationTests(WebApplicationFactory<Program> factory)
+    public TradeControllerIntegrationTests(CustomWebApplicationFactory factory)
     {
         _client = factory.CreateClient();
     }
 
     [Fact]
-    public async Task Index_ToReturnView()
+    public async Task Index_MSFT_ReturnsHtmlWithPriceElement()
     {
-        var response = await _client.GetAsync("/Trade/Index/MSFT");
+        HttpResponseMessage response = await _client.GetAsync("/Trade/Index/MSFT");
 
-        response.Should().BeSuccessful();
+        response.IsSuccessStatusCode.Should().BeTrue();
 
-        var html = new HtmlDocument();
-        html.LoadHtml(await response.Content.ReadAsStringAsync());
+        var document = new HtmlDocument();
+        document.LoadHtml(await response.Content.ReadAsStringAsync());
 
-        html.DocumentNode.SelectSingleNode("//*[contains(@class,'price')]").Should().NotBeNull();
+        var priceNodes = document.DocumentNode.SelectNodes(
+            "//*[contains(concat(' ', normalize-space(@class), ' '), ' price ')]");
+
+        priceNodes.Should().NotBeNullOrEmpty();
     }
 }

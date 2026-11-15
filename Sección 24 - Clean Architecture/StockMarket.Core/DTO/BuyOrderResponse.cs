@@ -15,14 +15,17 @@ public class BuyOrderResponse
 
 public static class BuyOrderExtensions
 {
-    public static BuyOrderResponse ToBuyOrderResponse(this BuyOrder order) => new()
+    public static BuyOrderResponse ToBuyOrderResponse(this Domain.Entities.BuyOrder buyOrder)
     {
-        BuyOrderID = order.BuyOrderID,
-        StockSymbol = order.StockSymbol,
-        StockName = order.StockName,
-        DateAndTimeOfOrder = order.DateAndTimeOfOrder,
-        Quantity = order.Quantity,
-        Price = order.Price,
-        TradeAmount = order.Quantity * order.Price
-    };
+        return new BuyOrderResponse
+        {
+            BuyOrderID = buyOrder.BuyOrderID,
+            StockSymbol = buyOrder.StockSymbol,
+            StockName = buyOrder.StockName,
+            DateAndTimeOfOrder = buyOrder.DateAndTimeOfOrder,
+            Quantity = buyOrder.Quantity,
+            Price = buyOrder.Price,
+            TradeAmount = buyOrder.Quantity * buyOrder.Price
+        };
+    }
 }

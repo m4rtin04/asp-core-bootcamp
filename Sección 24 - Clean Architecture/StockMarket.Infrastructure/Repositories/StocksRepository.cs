@@ -25,9 +25,9 @@ public class StocksRepository : IStocksRepository
         return sellOrder;
     }
 
-    public async Task<List<BuyOrder>> GetBuyOrders() =>
-        await _db.BuyOrders.OrderByDescending(o => o.DateAndTimeOfOrder).ToListAsync();
+    public async Task<List<BuyOrder>> GetBuyOrders()
+        => await _db.BuyOrders.AsNoTracking().ToListAsync();
 
-    public async Task<List<SellOrder>> GetSellOrders() =>
-        await _db.SellOrders.OrderByDescending(o => o.DateAndTimeOfOrder).ToListAsync();
+    public async Task<List<SellOrder>> GetSellOrders()
+        => await _db.SellOrders.AsNoTracking().ToListAsync();
 }

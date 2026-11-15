@@ -1,62 +1,49 @@
-using System.Globalization;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.EntityFrameworkCore;
-using StockMarket.Core.Domain.RepositoryContracts;
-using StockMarket.Core.ServiceContracts;
-using StockMarket.Core.Services;
-using StockMarket.Infrastructure.DatabaseContext;
-using StockMarket.Infrastructure.Repositories;
+using Rotativa.AspNetCore;
 using StockMarket.UI.Middleware;
-using StockMarket.UI.Models;
+using StockMarket.UI.StartupExtensions;
+using System.Globalization;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
-builder.Services.AddHttpClient();
+builder.Host.UseSerilog((context, services, loggerConfiguration) =>
+{
+loggerConfiguration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services);
+});
 
-// Options pattern
-builder.Services.Configure<TradingOptions>(builder.Configuration.GetSection("TradingOptions"));
-
-// Infrastructure
-builder.Services.AddDbContext<StockMarketDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<IFinnhubRepository, FinnhubRepository>();
-builder.Services.AddScoped<IStocksRepository, StocksRepository>();
-
-// Core
-builder.Services.AddScoped<IFinnhubCompanyProfileService, FinnhubCompanyProfileService>();
-builder.Services.AddScoped<IFinnhubStockPriceQuoteService, FinnhubStockPriceQuoteService>();
-builder.Services.AddScoped<IFinnhubStocksService, FinnhubStocksService>();
-builder.Services.AddScoped<IFinnhubSearchStocksService, FinnhubSearchStocksService>();
-builder.Services.AddScoped<IStocksService, StocksService>();
+builder.Services.ConfigureServices(builder.Configuration);
 
 var app = builder.Build();
 
-// Cultura fija: el punto decimal es el que usan Finnhub y el JavaScript de la vista.
-var culture = new CultureInfo("en-US");
-app.UseRequestLocalization(new RequestLocalizationOptions
-{
-    DefaultRequestCulture = new RequestCulture(culture),
-    SupportedCultures = new List<CultureInfo> { culture },
-    SupportedUICultures = new List<CultureInfo> { culture }
-});
-
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
+app.UseDeveloperExceptionPage();
 }
 else
 {
-    app.UseExceptionHandler("/Home/Error");   // muestra la vista amigable
-    app.UseExceptionHandlingMiddleware();     // registra y relanza
+app.UseExceptionHandler("/Home/Error");
+app.UseExceptionHandlingMiddleware();
 }
 
-// Rotativa necesita wkhtmltopdf.exe en wwwroot/Rotativa
-Rotativa.AspNetCore.RotativaConfiguration.Setup(app.Environment.WebRootPath, wkhtmltopdfRelativePath: "Rotativa");
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+DefaultRequestCulture = new RequestCulture("en-US"),
+SupportedCultures = new List<CultureInfo> { new("en-US") },
+SupportedUICultures = new List<CultureInfo> { new("en-US") }
+});
 
 app.UseStaticFiles();
+app.UseSerilogRequestLogging();
 app.UseRouting();
+
+app.MapGet("/", () => Results.Redirect("/Stocks/Explore"));
 app.MapControllers();
+
+RotativaConfiguration.Setup(app.Environment.WebRootPath, wkhtmltopdfRelativePath: "Rotativa");
+
 app.Run();
 
-public partial class Program { }   // necesario para WebApplicationFactory<Program>
+public partial class Program { }

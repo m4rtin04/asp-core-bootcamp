@@ -20,11 +20,18 @@ public class ExceptionHandlingMiddleware
         catch (Exception ex)
         {
             if (ex.InnerException != null)
-                _logger.LogError("{Type}: {Message}", ex.InnerException.GetType().ToString(), ex.InnerException.Message);
+            {
+                _logger.LogError("{ExceptionType} {ExceptionMessage}",
+                    ex.InnerException.GetType().ToString(), ex.InnerException.Message);
+            }
             else
-                _logger.LogError("{Type}: {Message}", ex.GetType().ToString(), ex.Message);
+            {
+                _logger.LogError("{ExceptionType} {ExceptionMessage}",
+                    ex.GetType().ToString(), ex.Message);
+            }
 
-            throw;   // lo captura UseExceptionHandler
+            // Relanzar: lo atrapa UseExceptionHandler, que muestra la vista amigable
+            throw;
         }
     }
 }

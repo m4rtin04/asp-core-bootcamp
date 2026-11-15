@@ -9,50 +9,54 @@ namespace StockMarket.UI.Filters;
 public class CreateOrderActionFilter : IAsyncActionFilter
 {
     private readonly ILogger<CreateOrderActionFilter> _logger;
+    private readonly IConfiguration _configuration;
 
-    public CreateOrderActionFilter(ILogger<CreateOrderActionFilter> logger) => _logger = logger;
+    public CreateOrderActionFilter(ILogger<CreateOrderActionFilter> logger, IConfiguration configuration)
+    {
+        _logger = logger;
+        _configuration = configuration;
+    }
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
+        // Before logic
         if (context.Controller is TradeController tradeController
-            && context.ActionArguments.TryGetValue("orderRequest", out var orderRequest)
-            && orderRequest != null)
+            && context.ActionArguments.TryGetValue("orderRequest", out var argument)
+            && argument is OrderRequest orderRequest)
         {
-            // La fecha se asigna aquí (después del model binding) y se vuelve a validar el modelo.
-            string? symbol = null, name = null;
-            uint quantity = 0;
-            double price = 0;
-
-            switch (orderRequest)
-            {
-                case BuyOrderRequest buy:
-                    buy.DateAndTimeOfOrder = DateTime.Now;
-                    (symbol, name, quantity, price) = (buy.StockSymbol, buy.StockName, buy.Quantity, buy.Price);
-                    break;
-                case SellOrderRequest sell:
-                    sell.DateAndTimeOfOrder = DateTime.Now;
-                    (symbol, name, quantity, price) = (sell.StockSymbol, sell.StockName, sell.Quantity, sell.Price);
-                    break;
-            }
-
+            // Se asigna la fecha real y se vuelve a validar.
+            orderRequest.DateAndTimeOfOrder = DateTime.Now;
             tradeController.ModelState.Clear();
             tradeController.TryValidateModel(orderRequest);
 
             if (!tradeController.ModelState.IsValid)
             {
-                _logger.LogWarning("Invalid order request for {Symbol}", symbol);
+                _logger.LogWarning("Order rejected for {StockSymbol}: {ErrorCount} validation error(s)",
+                    orderRequest.StockSymbol, tradeController.ModelState.ErrorCount);
 
                 tradeController.ViewBag.Errors = tradeController.ModelState.Values
                     .SelectMany(v => v.Errors)
                     .Select(e => e.ErrorMessage)
                     .ToList();
+                tradeController.ViewBag.FinnhubToken = _configuration["FinnhubToken"];
 
-                var model = new StockTrade { StockSymbol = symbol, StockName = name, Quantity = quantity, Price = price };
-                context.Result = tradeController.View("Index", model);   // corta el pipeline
+                var stockTrade = new StockTrade
+                {
+                    StockSymbol = orderRequest.StockSymbol,
+                    StockName = orderRequest.StockName,
+                    Quantity = orderRequest.Quantity,
+                    Price = orderRequest.Price
+                };
+
+                // Cortocircuito: se devuelve la vista y la acción nunca se ejecuta
+                context.Result = tradeController.View("Index", stockTrade);
                 return;
             }
         }
 
-        await next();   // sin errores: continúa con el siguiente filtro/acción
+        await next();   // sin errores: sigue el pipeline
+
+        // After logic: no se necesita
     }
 }
+

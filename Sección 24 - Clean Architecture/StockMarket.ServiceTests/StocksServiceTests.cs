@@ -1,6 +1,7 @@
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using StockMarket.Core.Domain.Entities;
 using StockMarket.Core.Domain.RepositoryContracts;
@@ -13,58 +14,64 @@ namespace StockMarket.ServiceTests;
 
 public class StocksServiceTests
 {
-    private readonly IStocksService _stocksService;
-    private readonly Mock<IStocksRepository> _repositoryMock = new();
+    private readonly IStocksService _service;
+    private readonly Mock<IStocksRepository> _repoMock = new();
     private readonly IFixture _fixture = new Fixture();
 
     public StocksServiceTests()
     {
-        _stocksService = new StocksService(_repositoryMock.Object, Mock.Of<ILogger<StocksService>>());
+        _service = new StocksService(_repoMock.Object, NullLogger<StocksService>.Instance);
     }
 
+    // Requests válidos generados con AutoFixture
     private BuyOrderRequest ValidBuy() => _fixture.Build<BuyOrderRequest>()
         .With(r => r.Quantity, 100u)
         .With(r => r.Price, 100d)
-        .With(r => r.DateAndTimeOfOrder, DateTime.Now)
+        .With(r => r.DateAndTimeOfOrder, new DateTime(2024, 12, 31))
         .Create();
 
     private SellOrderRequest ValidSell() => _fixture.Build<SellOrderRequest>()
         .With(r => r.Quantity, 100u)
         .With(r => r.Price, 100d)
-        .With(r => r.DateAndTimeOfOrder, DateTime.Now)
+        .With(r => r.DateAndTimeOfOrder, new DateTime(2024, 12, 31))
         .Create();
 
     #region CreateBuyOrder
+
     [Fact]
     public async Task CreateBuyOrder_NullRequest_ThrowsArgumentNullException()
     {
-        Func<Task> action = async () => await _stocksService.CreateBuyOrder(null);
+        Func<Task> action = async () => await _service.CreateBuyOrder(null);
         await action.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [Theory]
     [InlineData(0u)]
     [InlineData(100001u)]
-    public async Task CreateBuyOrder_InvalidQuantity_ThrowsArgumentException(uint quantity)
+    public async Task CreateBuyOrder_QuantityOutOfRange_ThrowsArgumentException(uint quantity)
     {
         var request = _fixture.Build<BuyOrderRequest>()
-            .With(r => r.Quantity, quantity).With(r => r.Price, 100d)
-            .With(r => r.DateAndTimeOfOrder, DateTime.Now).Create();
+            .With(r => r.Quantity, quantity)
+            .With(r => r.Price, 100d)
+            .With(r => r.DateAndTimeOfOrder, new DateTime(2024, 12, 31))
+            .Create();
 
-        Func<Task> action = async () => await _stocksService.CreateBuyOrder(request);
+        Func<Task> action = async () => await _service.CreateBuyOrder(request);
         await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Theory]
     [InlineData(0d)]
     [InlineData(10001d)]
-    public async Task CreateBuyOrder_InvalidPrice_ThrowsArgumentException(double price)
+    public async Task CreateBuyOrder_PriceOutOfRange_ThrowsArgumentException(double price)
     {
         var request = _fixture.Build<BuyOrderRequest>()
-            .With(r => r.Quantity, 100u).With(r => r.Price, price)
-            .With(r => r.DateAndTimeOfOrder, DateTime.Now).Create();
+            .With(r => r.Quantity, 100u)
+            .With(r => r.Price, price)
+            .With(r => r.DateAndTimeOfOrder, new DateTime(2024, 12, 31))
+            .Create();
 
-        Func<Task> action = async () => await _stocksService.CreateBuyOrder(request);
+        Func<Task> action = async () => await _service.CreateBuyOrder(request);
         await action.Should().ThrowAsync<ArgumentException>();
     }
 
@@ -72,11 +79,13 @@ public class StocksServiceTests
     public async Task CreateBuyOrder_NullStockSymbol_ThrowsArgumentException()
     {
         var request = _fixture.Build<BuyOrderRequest>()
-            .With(r => r.StockSymbol, (string?)null)
-            .With(r => r.Quantity, 100u).With(r => r.Price, 100d)
-            .With(r => r.DateAndTimeOfOrder, DateTime.Now).Create();
+            .Without(r => r.StockSymbol)
+            .With(r => r.Quantity, 100u)
+            .With(r => r.Price, 100d)
+            .With(r => r.DateAndTimeOfOrder, new DateTime(2024, 12, 31))
+            .Create();
 
-        Func<Task> action = async () => await _stocksService.CreateBuyOrder(request);
+        Func<Task> action = async () => await _service.CreateBuyOrder(request);
         await action.Should().ThrowAsync<ArgumentException>();
     }
 
@@ -84,59 +93,72 @@ public class StocksServiceTests
     public async Task CreateBuyOrder_DateOlderThan2000_ThrowsArgumentException()
     {
         var request = _fixture.Build<BuyOrderRequest>()
-            .With(r => r.Quantity, 100u).With(r => r.Price, 100d)
-            .With(r => r.DateAndTimeOfOrder, Convert.ToDateTime("1999-12-31")).Create();
+            .With(r => r.Quantity, 100u)
+            .With(r => r.Price, 100d)
+            .With(r => r.DateAndTimeOfOrder, DateTime.Parse("1999-12-31"))
+            .Create();
 
-        Func<Task> action = async () => await _stocksService.CreateBuyOrder(request);
+        Func<Task> action = async () => await _service.CreateBuyOrder(request);
         await action.Should().ThrowAsync<ArgumentException>();
+
+        // si la validación falla, nunca se llega al repositorio
+        _repoMock.Verify(r => r.CreateBuyOrder(It.IsAny<BuyOrder>()), Times.Never);
     }
 
     [Fact]
-    public async Task CreateBuyOrder_ValidRequest_ReturnsResponseWithGeneratedId()
+    public async Task CreateBuyOrder_ValidRequest_ReturnsResponseWithNewGuid()
     {
         var request = ValidBuy();
-        _repositoryMock.Setup(r => r.CreateBuyOrder(It.IsAny<BuyOrder>()))
-            .ReturnsAsync((BuyOrder o) => o);
+        BuyOrder saved = request.ToBuyOrder();
+        saved.BuyOrderID = Guid.NewGuid();
 
-        var response = await _stocksService.CreateBuyOrder(request);
+        _repoMock.Setup(r => r.CreateBuyOrder(It.IsAny<BuyOrder>())).ReturnsAsync(saved);
 
-        response.Should().BeOfType<BuyOrderResponse>();
+        BuyOrderResponse response = await _service.CreateBuyOrder(request);
+
         response.BuyOrderID.Should().NotBe(Guid.Empty);
-        response.TradeAmount.Should().Be(request.Quantity * request.Price);
+        response.Should().BeEquivalentTo(saved.ToBuyOrderResponse());
+        _repoMock.Verify(r => r.CreateBuyOrder(It.IsAny<BuyOrder>()), Times.Once);
     }
+
     #endregion
 
     #region CreateSellOrder
+
     [Fact]
     public async Task CreateSellOrder_NullRequest_ThrowsArgumentNullException()
     {
-        Func<Task> action = async () => await _stocksService.CreateSellOrder(null);
+        Func<Task> action = async () => await _service.CreateSellOrder(null);
         await action.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [Theory]
     [InlineData(0u)]
     [InlineData(100001u)]
-    public async Task CreateSellOrder_InvalidQuantity_ThrowsArgumentException(uint quantity)
+    public async Task CreateSellOrder_QuantityOutOfRange_ThrowsArgumentException(uint quantity)
     {
         var request = _fixture.Build<SellOrderRequest>()
-            .With(r => r.Quantity, quantity).With(r => r.Price, 100d)
-            .With(r => r.DateAndTimeOfOrder, DateTime.Now).Create();
+            .With(r => r.Quantity, quantity)
+            .With(r => r.Price, 100d)
+            .With(r => r.DateAndTimeOfOrder, new DateTime(2024, 12, 31))
+            .Create();
 
-        Func<Task> action = async () => await _stocksService.CreateSellOrder(request);
+        Func<Task> action = async () => await _service.CreateSellOrder(request);
         await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Theory]
     [InlineData(0d)]
     [InlineData(10001d)]
-    public async Task CreateSellOrder_InvalidPrice_ThrowsArgumentException(double price)
+    public async Task CreateSellOrder_PriceOutOfRange_ThrowsArgumentException(double price)
     {
         var request = _fixture.Build<SellOrderRequest>()
-            .With(r => r.Quantity, 100u).With(r => r.Price, price)
-            .With(r => r.DateAndTimeOfOrder, DateTime.Now).Create();
+            .With(r => r.Quantity, 100u)
+            .With(r => r.Price, price)
+            .With(r => r.DateAndTimeOfOrder, new DateTime(2024, 12, 31))
+            .Create();
 
-        Func<Task> action = async () => await _stocksService.CreateSellOrder(request);
+        Func<Task> action = async () => await _service.CreateSellOrder(request);
         await action.Should().ThrowAsync<ArgumentException>();
     }
 
@@ -144,11 +166,13 @@ public class StocksServiceTests
     public async Task CreateSellOrder_NullStockSymbol_ThrowsArgumentException()
     {
         var request = _fixture.Build<SellOrderRequest>()
-            .With(r => r.StockSymbol, (string?)null)
-            .With(r => r.Quantity, 100u).With(r => r.Price, 100d)
-            .With(r => r.DateAndTimeOfOrder, DateTime.Now).Create();
+            .Without(r => r.StockSymbol)
+            .With(r => r.Quantity, 100u)
+            .With(r => r.Price, 100d)
+            .With(r => r.DateAndTimeOfOrder, new DateTime(2024, 12, 31))
+            .Create();
 
-        Func<Task> action = async () => await _stocksService.CreateSellOrder(request);
+        Func<Task> action = async () => await _service.CreateSellOrder(request);
         await action.Should().ThrowAsync<ArgumentException>();
     }
 
@@ -156,70 +180,75 @@ public class StocksServiceTests
     public async Task CreateSellOrder_DateOlderThan2000_ThrowsArgumentException()
     {
         var request = _fixture.Build<SellOrderRequest>()
-            .With(r => r.Quantity, 100u).With(r => r.Price, 100d)
-            .With(r => r.DateAndTimeOfOrder, Convert.ToDateTime("1999-12-31")).Create();
+            .With(r => r.Quantity, 100u)
+            .With(r => r.Price, 100d)
+            .With(r => r.DateAndTimeOfOrder, DateTime.Parse("1999-12-31"))
+            .Create();
 
-        Func<Task> action = async () => await _stocksService.CreateSellOrder(request);
+        Func<Task> action = async () => await _service.CreateSellOrder(request);
         await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
-    public async Task CreateSellOrder_ValidRequest_ReturnsResponseWithGeneratedId()
+    public async Task CreateSellOrder_ValidRequest_ReturnsResponseWithNewGuid()
     {
         var request = ValidSell();
-        _repositoryMock.Setup(r => r.CreateSellOrder(It.IsAny<SellOrder>()))
-            .ReturnsAsync((SellOrder o) => o);
+        SellOrder saved = request.ToSellOrder();
+        saved.SellOrderID = Guid.NewGuid();
 
-        var response = await _stocksService.CreateSellOrder(request);
+        _repoMock.Setup(r => r.CreateSellOrder(It.IsAny<SellOrder>())).ReturnsAsync(saved);
 
-        response.Should().BeOfType<SellOrderResponse>();
+        SellOrderResponse response = await _service.CreateSellOrder(request);
+
         response.SellOrderID.Should().NotBe(Guid.Empty);
+        response.Should().BeEquivalentTo(saved.ToSellOrderResponse());
     }
+
     #endregion
 
-    #region GetBuyOrders
+    #region GetBuyOrders / GetSellOrders
+
     [Fact]
-    public async Task GetBuyOrders_Default_ReturnsEmptyList()
+    public async Task GetBuyOrders_ByDefault_ReturnsEmptyList()
     {
-        _repositoryMock.Setup(r => r.GetBuyOrders()).ReturnsAsync(new List<BuyOrder>());
+        _repoMock.Setup(r => r.GetBuyOrders()).ReturnsAsync(new List<BuyOrder>());
 
-        var result = await _stocksService.GetBuyOrders();
+        List<BuyOrderResponse> orders = await _service.GetBuyOrders();
 
-        result.Should().BeEmpty();
+        orders.Should().BeEmpty();
     }
 
     [Fact]
-    public async Task GetBuyOrders_AfterCreatingOrders_ReturnsSameOrders()
+    public async Task GetBuyOrders_AfterAddingOrders_ReturnsAllOfThem()
     {
-        var orders = _fixture.CreateMany<BuyOrder>(3).ToList();
-        _repositoryMock.Setup(r => r.GetBuyOrders()).ReturnsAsync(orders);
+        List<BuyOrder> stored = _fixture.CreateMany<BuyOrder>(3).ToList();
+        _repoMock.Setup(r => r.GetBuyOrders()).ReturnsAsync(stored);
 
-        var result = await _stocksService.GetBuyOrders();
+        List<BuyOrderResponse> orders = await _service.GetBuyOrders();
 
-        result.Select(o => o.BuyOrderID).Should().BeEquivalentTo(orders.Select(o => o.BuyOrderID));
-    }
-    #endregion
-
-    #region GetSellOrders
-    [Fact]
-    public async Task GetSellOrders_Default_ReturnsEmptyList()
-    {
-        _repositoryMock.Setup(r => r.GetSellOrders()).ReturnsAsync(new List<SellOrder>());
-
-        var result = await _stocksService.GetSellOrders();
-
-        result.Should().BeEmpty();
+        orders.Should().BeEquivalentTo(stored.Select(o => o.ToBuyOrderResponse()));
     }
 
     [Fact]
-    public async Task GetSellOrders_AfterCreatingOrders_ReturnsSameOrders()
+    public async Task GetSellOrders_ByDefault_ReturnsEmptyList()
     {
-        var orders = _fixture.CreateMany<SellOrder>(3).ToList();
-        _repositoryMock.Setup(r => r.GetSellOrders()).ReturnsAsync(orders);
+        _repoMock.Setup(r => r.GetSellOrders()).ReturnsAsync(new List<SellOrder>());
 
-        var result = await _stocksService.GetSellOrders();
+        List<SellOrderResponse> orders = await _service.GetSellOrders();
 
-        result.Select(o => o.SellOrderID).Should().BeEquivalentTo(orders.Select(o => o.SellOrderID));
+        orders.Should().BeEmpty();
     }
+
+    [Fact]
+    public async Task GetSellOrders_AfterAddingOrders_ReturnsAllOfThem()
+    {
+        List<SellOrder> stored = _fixture.CreateMany<SellOrder>(3).ToList();
+        _repoMock.Setup(r => r.GetSellOrders()).ReturnsAsync(stored);
+
+        List<SellOrderResponse> orders = await _service.GetSellOrders();
+
+        orders.Should().BeEquivalentTo(stored.Select(o => o.ToSellOrderResponse()));
+    }
+
     #endregion
 }

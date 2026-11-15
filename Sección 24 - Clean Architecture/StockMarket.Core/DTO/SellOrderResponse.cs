@@ -15,14 +15,17 @@ public class SellOrderResponse
 
 public static class SellOrderExtensions
 {
-    public static SellOrderResponse ToSellOrderResponse(this SellOrder order) => new()
+    public static SellOrderResponse ToSellOrderResponse(this Domain.Entities.SellOrder sellOrder)
     {
-        SellOrderID = order.SellOrderID,
-        StockSymbol = order.StockSymbol,
-        StockName = order.StockName,
-        DateAndTimeOfOrder = order.DateAndTimeOfOrder,
-        Quantity = order.Quantity,
-        Price = order.Price,
-        TradeAmount = order.Quantity * order.Price
-    };
+        return new SellOrderResponse
+        {
+            SellOrderID = sellOrder.SellOrderID,
+            StockSymbol = sellOrder.StockSymbol,
+            StockName = sellOrder.StockName,
+            DateAndTimeOfOrder = sellOrder.DateAndTimeOfOrder,
+            Quantity = sellOrder.Quantity,
+            Price = sellOrder.Price,
+            TradeAmount = sellOrder.Quantity * sellOrder.Price
+        };
+    }
 }
