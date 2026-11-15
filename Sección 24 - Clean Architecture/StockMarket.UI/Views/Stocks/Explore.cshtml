@@ -1,0 +1,22 @@
+@model List<Stock>
+@{ ViewBag.Title = "Explore"; }
+
+<div class="explore-grid">
+    <section class="card stock-list">
+        <h2>Stocks</h2>
+        <ul>
+            @foreach (var stock in Model)
+            {
+                <li class="@(stock.StockSymbol == (string?)ViewBag.stock ? "selected" : "")">
+                    <a asp-controller="Stocks" asp-action="Explore" asp-route-stock="@stock.StockSymbol">
+                        <strong>@stock.StockSymbol</strong> - @stock.StockName
+                    </a>
+                </li>
+            }
+        </ul>
+    </section>
+
+    <section class="selected-stock">
+        @await Component.InvokeAsync("SelectedStock", new { stockSymbol = (string?)ViewBag.stock })
+    </section>
+</div>

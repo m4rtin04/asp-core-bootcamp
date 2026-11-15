@@ -1,0 +1,36 @@
+@model Orders
+@{ Layout = "_LayoutPdf"; }
+
+<h2>Buy Orders</h2>
+<table>
+    <thead>
+        <tr><th>Symbol</th><th>Name</th><th>Date &amp; time</th><th>Quantity</th><th>Price</th><th>Trade amount</th></tr>
+    </thead>
+    <tbody>
+    @foreach (var o in Model.BuyOrders)
+    {
+        <tr>
+            <td>@o.StockSymbol</td><td>@o.StockName</td>
+            <td>@o.DateAndTimeOfOrder.ToString("dd MMM yyyy, hh:mm tt")</td>
+            <td>@o.Quantity</td><td>$@o.Price.ToString("0.00")</td><td>$@o.TradeAmount.ToString("N2")</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<h2>Sell Orders</h2>
+<table>
+    <thead>
+        <tr><th>Symbol</th><th>Name</th><th>Date &amp; time</th><th>Quantity</th><th>Price</th><th>Trade amount</th></tr>
+    </thead>
+    <tbody>
+    @foreach (var o in Model.SellOrders)
+    {
+        <tr>
+            <td>@o.StockSymbol</td><td>@o.StockName</td>
+            <td>@o.DateAndTimeOfOrder.ToString("dd MMM yyyy, hh:mm tt")</td>
+            <td>@o.Quantity</td><td>$@o.Price.ToString("0.00")</td><td>$@o.TradeAmount.ToString("N2")</td>
+        </tr>
+    }
+    </tbody>
+</table>

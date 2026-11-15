@@ -1,0 +1,17 @@
+@model Dictionary<string, string>
+
+<div class="card selected-card">
+    @if (Model.TryGetValue("logo", out var logo) && !string.IsNullOrEmpty(logo))
+    {
+        <img src="@logo" alt="logo" class="stock-logo" />
+    }
+    <h2>@(Model.GetValueOrDefault("name"))</h2>
+    <p><strong>Symbol:</strong> @(Model.GetValueOrDefault("ticker"))</p>
+    <p><strong>Industry:</strong> @(Model.GetValueOrDefault("finnhubIndustry"))</p>
+    <p><strong>Exchange:</strong> @(Model.GetValueOrDefault("exchange"))</p>
+    <p><strong>Country:</strong> @(Model.GetValueOrDefault("country"))</p>
+    <p class="price-label">Price: $@(Model.GetValueOrDefault("price"))</p>
+
+    <a class="button button-blue-back" asp-controller="Trade" asp-action="Index"
+       asp-route-stockSymbol="@(Model.GetValueOrDefault("ticker"))">Buy / Sell</a>
+</div>

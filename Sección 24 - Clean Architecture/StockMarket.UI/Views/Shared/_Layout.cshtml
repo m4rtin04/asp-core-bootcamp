@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Stock Market</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header class="navbar">
+        <span class="brand">Stocks App</span>
+        <nav>
+            <a asp-controller="Stocks" asp-action="Explore">Explore</a>
+            <a asp-controller="Trade" asp-action="Index" asp-route-stockSymbol="MSFT">Trade</a>
+            <a asp-controller="Trade" asp-action="Orders">Orders</a>
+        </nav>
+    </header>
+    <main class="container">
+        @RenderBody()
+    </main>
+    @await RenderSectionAsync("scripts", required: false)
+</body>
+</html>

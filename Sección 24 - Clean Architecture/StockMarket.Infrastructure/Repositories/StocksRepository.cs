@@ -1,0 +1,33 @@
+using Microsoft.EntityFrameworkCore;
+using StockMarket.Core.Domain.Entities;
+using StockMarket.Core.Domain.RepositoryContracts;
+using StockMarket.Infrastructure.DatabaseContext;
+
+namespace StockMarket.Infrastructure.Repositories;
+
+public class StocksRepository : IStocksRepository
+{
+    private readonly StockMarketDbContext _db;
+
+    public StocksRepository(StockMarketDbContext db) => _db = db;
+
+    public async Task<BuyOrder> CreateBuyOrder(BuyOrder buyOrder)
+    {
+        _db.BuyOrders.Add(buyOrder);
+        await _db.SaveChangesAsync();
+        return buyOrder;
+    }
+
+    public async Task<SellOrder> CreateSellOrder(SellOrder sellOrder)
+    {
+        _db.SellOrders.Add(sellOrder);
+        await _db.SaveChangesAsync();
+        return sellOrder;
+    }
+
+    public async Task<List<BuyOrder>> GetBuyOrders() =>
+        await _db.BuyOrders.OrderByDescending(o => o.DateAndTimeOfOrder).ToListAsync();
+
+    public async Task<List<SellOrder>> GetSellOrders() =>
+        await _db.SellOrders.OrderByDescending(o => o.DateAndTimeOfOrder).ToListAsync();
+}
