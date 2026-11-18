@@ -1,0 +1,19 @@
+﻿@model ProfileDTO
+@{
+    ViewData["Title"] = "My profile";
+}
+
+<div class="card">
+    <h2>My profile</h2>
+    <p>Signed in as <b>@User.Identity?.Name</b></p>
+
+    <form asp-action="Profile" method="post">
+        <div class="field">
+            <label asp-for="DisplayName"></label>
+            <input asp-for="DisplayName" />
+            <span asp-validation-for="DisplayName" class="error"></span>
+        </div>
+
+        <button type="submit">Save</button>
+    </form>
+</div>

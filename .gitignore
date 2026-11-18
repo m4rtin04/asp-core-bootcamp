@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Sección 18 - EntityFrameworkCore/Migrations
+/Sección 25 - Identity, Authorization and Security/Migrations

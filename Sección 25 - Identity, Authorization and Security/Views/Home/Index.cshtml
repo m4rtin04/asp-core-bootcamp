@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<h1>Welcome</h1>
+<p>This page is public. Anyone can see it.</p>
+
+@if (User.Identity?.IsAuthenticated != true)
+{
+    <p>
+        <a asp-controller="Account" asp-action="Login">Log in</a> or
+        <a asp-controller="Account" asp-action="Register">create an account</a>
+        to see more.
+    </p>
+}

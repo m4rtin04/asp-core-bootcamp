@@ -1,0 +1,30 @@
+﻿@model LoginDTO
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="card">
+    <h2>Login</h2>
+
+    <div asp-validation-summary="ModelOnly" class="error"></div>
+
+    <form asp-action="Login" asp-route-returnUrl="@ViewBag.ReturnUrl" method="post">
+        <div class="field">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" />
+            <span asp-validation-for="Email" class="error"></span>
+        </div>
+
+        <div class="field">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" />
+            <span asp-validation-for="Password" class="error"></span>
+        </div>
+
+        <div class="field">
+            <label><input asp-for="RememberMe" /> Remember me</label>
+        </div>
+
+        <button type="submit">Login</button>
+    </form>
+</div>

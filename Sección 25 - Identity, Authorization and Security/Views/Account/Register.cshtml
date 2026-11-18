@@ -1,0 +1,45 @@
+﻿@model RegisterDTO
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="card">
+    <h2>Create account</h2>
+
+    <div asp-validation-summary="ModelOnly" class="error"></div>
+
+    <form asp-action="Register" method="post">
+        <div class="field">
+            <label asp-for="DisplayName"></label>
+            <input asp-for="DisplayName" />
+            <span asp-validation-for="DisplayName" class="error"></span>
+        </div>
+
+        <div class="field">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" />
+            <span asp-validation-for="Email" class="error"></span>
+        </div>
+
+        <div class="field">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" />
+            <span asp-validation-for="Password" class="error"></span>
+        </div>
+
+        <div class="field">
+            <label asp-for="ConfirmPassword"></label>
+            <input asp-for="ConfirmPassword" />
+            <span asp-validation-for="ConfirmPassword" class="error"></span>
+        </div>
+
+        <button type="submit">Register</button>
+    </form>
+</div>
+
+@section Scripts {
+    @* Sin estos tres scripts la validación remota no se ejecuta *@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
+}

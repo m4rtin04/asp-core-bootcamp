@@ -1,0 +1,33 @@
+﻿@model List<UserRowDTO>
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h2>Users</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@user.DisplayName</td>
+                <td>@(user.IsAdmin ? "Admin" : "User")</td>
+                <td>
+                    <form asp-area="Admin" asp-controller="Users" asp-action="ToggleAdmin" method="post">
+                        <input type="hidden" name="id" value="@user.Id" />
+                        <button type="submit">@(user.IsAdmin ? "Remove admin" : "Make admin")</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

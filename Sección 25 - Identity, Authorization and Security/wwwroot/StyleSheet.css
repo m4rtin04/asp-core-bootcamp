@@ -1,0 +1,113 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f5f5f5;
+    color: #222;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1f3a5f;
+    padding: 10px 20px;
+    color: #fff;
+}
+
+    .navbar a {
+        color: #cfd8e3;
+        text-decoration: none;
+        margin-right: 14px;
+        padding-bottom: 3px;
+    }
+
+        .navbar a.active {
+            color: #fff;
+            border-bottom: 2px solid #fff;
+        }
+
+.brand {
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+.nav-right span {
+    margin-right: 12px;
+}
+
+.page {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 420px;
+}
+
+.field {
+    margin-bottom: 14px;
+}
+
+    .field label {
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .field input[type=text], .field input[type=email], .field input[type=password] {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+button {
+    background: #2d6cb5;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.inline-form {
+    display: inline;
+}
+
+.error {
+    color: #c00;
+    font-size: 0.9em;
+}
+
+.message {
+    background: #e3f5e6;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.error-box {
+    background: #fde7e7;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+    .table th, .table td {
+        padding: 8px 10px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+
+    .table th {
+        background: #e9edf2;
+    }

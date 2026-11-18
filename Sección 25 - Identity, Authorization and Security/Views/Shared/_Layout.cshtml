@@ -1,0 +1,71 @@
+﻿@{
+    string? area = ViewContext.RouteData.Values["area"]?.ToString();
+    string? controller = ViewContext.RouteData.Values["controller"]?.ToString();
+    string? action = ViewContext.RouteData.Values["action"]?.ToString();
+
+    string IsActive(bool condition) => condition ? "active" : "";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - SecureHub</title>
+    <link rel="stylesheet" href="~/StyleSheet.css" asp-append-version="true" />
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <span class="brand">SecureHub</span>
+            <a asp-area="" asp-controller="Home" asp-action="Index"
+               class="@IsActive(controller == "Home")">Home</a>
+
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a asp-area="" asp-controller="Account" asp-action="Profile"
+                   class="@IsActive(action == "Profile")">My profile</a>
+                <a asp-area="" asp-controller="Premium" asp-action="Index"
+                   class="@IsActive(controller == "Premium")">Premium</a>
+            }
+
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-area="Admin" asp-controller="Users" asp-action="Index"
+                   class="@IsActive(area == "Admin")">Admin</a>
+            }
+        </div>
+
+        <div class="nav-right">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <span>Hello, @User.Identity.Name</span>
+                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="inline-form">
+                    <button type="submit">Logout</button>
+                </form>
+            }
+            else
+            {
+                <a asp-area="" asp-controller="Account" asp-action="Login"
+                   class="@IsActive(action == "Login")">Login</a>
+                <a asp-area="" asp-controller="Account" asp-action="Register"
+                   class="@IsActive(action == "Register")">Register</a>
+            }
+        </div>
+    </nav>
+
+    <main class="page">
+        @if (TempData["Message"] != null)
+        {
+            <div class="message">@TempData["Message"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="error-box">@TempData["Error"]</div>
+        }
+
+        @RenderBody()
+    </main>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
