@@ -259,7 +259,22 @@ Este repositorio contiene mi progreso, prácticas y ejercicios realizados a lo l
   * Migraciones de EF Core con `--project` y `--startup-project` al separar el `DbContext` de la UI.
   * Actualización de namespaces y referencias entre proyectos, incluido el proyecto de pruebas.
 
-### Sección 25: Próximamente
+### - Sección 25: Identity, Authorization and Security
+- **Proyecto:** Portal de acceso seguro.
+- **Descripción:** Aplicación web MVC sin lógica de negocio, centrada en la seguridad: registro e inicio de sesión con ASP.NET Core Identity, zonas pública, privada y de administración, roles, una política de autorización personalizada y protecciones contra XSRF y de transporte con HTTPS.
+- **Conceptos clave:**
+  * Configuración de **ASP.NET Core Identity** con modelos propios (`ApplicationUser`, `ApplicationRole`) y `IdentityDbContext`.
+  * Registro e inicio de sesión con `UserManager` y `SignInManager`, y botones de Login/Logout con enlace activo en el layout.
+  * Reglas de complejidad de contraseña mediante `AddIdentity`.
+  * `[Authorize]`, `[AllowAnonymous]` y `ReturnUrl` (validado con `Url.IsLocalUrl`).
+  * **Validación remota** con `[Remote]` para comprobar emails ya registrados.
+  * **Roles** (`Admin` y `User`) y autenticación basada en roles, con un administrador inicial creado desde User Secrets.
+  * **Areas** y enrutamiento convencional para el panel de administración.
+  * **Política de autorización personalizada** (`AccountAgeRequirement` y `AccountAgeHandler`).
+  * **HTTPS**: redirección, HSTS y cookie de autenticación segura.
+  * **XSRF**: tokens antifalsificación en formularios y `AutoValidateAntiforgeryTokenAttribute` como filtro global.
+
+### Sección 26: Próximamente
 ---
 ## 🛠️ Tecnologías y herramientas
 
